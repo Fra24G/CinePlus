@@ -35604,9 +35604,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 492,
+																			"left": 488,
 																			"top": 176,
-																			"width": 92.498046875,
+																			"width": 101.15625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -35614,7 +35614,7 @@
 																				"$ref": "AAAAAAGhfB7XbJqTp7w="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : consultarInfo"
+																			"text": "3 : consultarInfo()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -36204,7 +36204,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfBuj5phA/iY="
 															},
-															"name": "consultarInfo",
+															"name": "consultarInfo()",
 															"source": {
 																"$ref": "AAAAAAGhfBxCM5nzdbg="
 															},
@@ -37271,9 +37271,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 455,
+																			"left": 451,
 																			"top": 176,
-																			"width": 92.498046875,
+																			"width": 101.15625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -37281,7 +37281,7 @@
 																				"$ref": "AAAAAAGhfCRtVJ1UKdE="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : consultarInfo"
+																			"text": "3 : consultarInfo()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -37638,7 +37638,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfCJCbZsES98="
 															},
-															"name": "consultarInfo",
+															"name": "consultarInfo()",
 															"source": {
 																"$ref": "AAAAAAGhfCK1I5y3ZFE="
 															},
@@ -102994,7 +102994,7 @@
 																				"$ref": "AAAAAAGhYJtq3W0+PRE="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : RegistrarFuncion"
+																			"text": "2 : RegistrarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -103100,9 +103100,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 380,
+																			"left": 376,
 																			"top": 168,
-																			"width": 110.5634765625,
+																			"width": 119.2216796875,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -103110,7 +103110,7 @@
 																				"$ref": "AAAAAAGhYJwpRG1Wrr8="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : ObtenerPelicula"
+																			"text": "3 : ObtenerPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -103333,9 +103333,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 454,
+																			"left": 450,
 																			"top": 240,
-																			"width": 88.17529296875,
+																			"width": 96.83349609375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -103343,7 +103343,7 @@
 																				"$ref": "AAAAAAGhYJ0mZG2DYBQ="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : obtenerSala"
+																			"text": "5 : obtenerSala()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -103686,7 +103686,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhYIftgGrik2k="
 															},
-															"name": "RegistrarFuncion",
+															"name": "RegistrarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhYIhM5Wx1PMk="
 															},
@@ -103700,7 +103700,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhYIftgGrik2k="
 															},
-															"name": "ObtenerPelicula",
+															"name": "ObtenerPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhYIhnzWyVx0s="
 															},
@@ -103729,7 +103729,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhYIftgGrik2k="
 															},
-															"name": "obtenerSala",
+															"name": "obtenerSala()",
 															"source": {
 																"$ref": "AAAAAAGhYIhnzWyVx0s="
 															},
@@ -104786,9 +104786,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 233,
+																			"left": 229,
 																			"top": 136,
-																			"width": 117.05078125,
+																			"width": 125.708984375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -104796,7 +104796,7 @@
 																				"$ref": "AAAAAAGhfCxfdJ/4WqU="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : RegistrarFuncion"
+																			"text": "2 : RegistrarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -104902,9 +104902,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 406,
+																			"left": 401,
 																			"top": 160,
-																			"width": 107.681640625,
+																			"width": 116.33984375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -104912,7 +104912,7 @@
 																				"$ref": "AAAAAAGhfCzJ3KAPdzM="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : obtenerPelicula"
+																			"text": "3 : obtenerPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -105255,7 +105255,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfCkvPJ2XoVg="
 															},
-															"name": "RegistrarFuncion",
+															"name": "RegistrarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfCqS258s5dw="
 															},
@@ -105269,7 +105269,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfCkvPJ2XoVg="
 															},
-															"name": "obtenerPelicula",
+															"name": "obtenerPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfCqoep9MDMM="
 															},
@@ -106324,9 +106324,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 205,
+																			"left": 201,
 																			"top": 137,
-																			"width": 117.05078125,
+																			"width": 125.708984375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -106334,7 +106334,7 @@
 																				"$ref": "AAAAAAGhfDCRI6Ky4yI="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : RegistrarFuncion"
+																			"text": "2 : RegistrarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -106440,9 +106440,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 362,
+																			"left": 357,
 																			"top": 161,
-																			"width": 107.681640625,
+																			"width": 116.33984375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -106450,7 +106450,7 @@
 																				"$ref": "AAAAAAGhfDDT66LJi28="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : obtenerPelicula"
+																			"text": "3 : obtenerPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -106673,9 +106673,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 438,
+																			"left": 434,
 																			"top": 240,
-																			"width": 88.17529296875,
+																			"width": 96.83349609375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -106683,7 +106683,7 @@
 																				"$ref": "AAAAAAGhfDFKm6L2//A="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : obtenerSala"
+																			"text": "5 : obtenerSala()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -107026,7 +107026,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfC43w6BR1G8="
 															},
-															"name": "RegistrarFuncion",
+															"name": "RegistrarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfC8XAqHmww8="
 															},
@@ -107040,7 +107040,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfC43w6BR1G8="
 															},
-															"name": "obtenerPelicula",
+															"name": "obtenerPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfC8kq6IF8Oc="
 															},
@@ -107069,7 +107069,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfC43w6BR1G8="
 															},
-															"name": "obtenerSala",
+															"name": "obtenerSala()",
 															"source": {
 																"$ref": "AAAAAAGhfC8kq6IF8Oc="
 															},
@@ -109739,9 +109739,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 296,
+																			"left": 291,
 																			"top": 144,
-																			"width": 109.8271484375,
+																			"width": 118.4853515625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -109749,7 +109749,7 @@
 																				"$ref": "AAAAAAGhfDZHS6Vt8V0="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : eliminarFuncion"
+																			"text": "2 : eliminarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -109855,9 +109855,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 476,
+																			"left": 472,
 																			"top": 160,
-																			"width": 103.33349609375,
+																			"width": 111.99169921875,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -109865,7 +109865,7 @@
 																				"$ref": "AAAAAAGhfDbCq6WEM0I="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarFuncion"
+																			"text": "3 : buscarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -110208,7 +110208,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfDQ5M6M5y68="
 															},
-															"name": "eliminarFuncion",
+															"name": "eliminarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfDTBYqTNAjg="
 															},
@@ -110222,7 +110222,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfDQ5M6M5y68="
 															},
-															"name": "buscarFuncion",
+															"name": "buscarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfDTYXKTtwWs="
 															},
@@ -111009,9 +111009,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 285,
+																			"left": 280,
 																			"top": 144,
-																			"width": 109.8271484375,
+																			"width": 118.4853515625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -111019,7 +111019,7 @@
 																				"$ref": "AAAAAAGhfDnWI6feUh4="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : eliminarFuncion"
+																			"text": "2 : eliminarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -111125,9 +111125,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 477,
+																			"left": 473,
 																			"top": 169,
-																			"width": 103.33349609375,
+																			"width": 111.99169921875,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -111135,7 +111135,7 @@
 																				"$ref": "AAAAAAGhfDoqqqf1kOk="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarFuncion"
+																			"text": "3 : buscarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -111358,9 +111358,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 474,
+																			"left": 469,
 																			"top": 232,
-																			"width": 109.8271484375,
+																			"width": 118.4853515625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -111368,7 +111368,7 @@
 																				"$ref": "AAAAAAGhfDrksqgiQBI="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : eliminarFuncion"
+																			"text": "5 : eliminarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -111711,7 +111711,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfDgdM6XGaeA="
 															},
-															"name": "eliminarFuncion",
+															"name": "eliminarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfDi7AqdayKY="
 															},
@@ -111725,7 +111725,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfDgdM6XGaeA="
 															},
-															"name": "buscarFuncion",
+															"name": "buscarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfDjL0qd5tF4="
 															},
@@ -111754,7 +111754,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfDgdM6XGaeA="
 															},
-															"name": "eliminarFuncion",
+															"name": "eliminarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfDjL0qd5tF4="
 															},
@@ -114857,9 +114857,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 240,
+																			"left": 235,
 																			"top": 144,
-																			"width": 119.95166015625,
+																			"width": 128.60986328125,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -114867,7 +114867,7 @@
 																				"$ref": "AAAAAAGhfD+WgqsX1tk="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : actualizarFuncion"
+																			"text": "2 : actualizarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -114973,9 +114973,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 522,
+																			"left": 518,
 																			"top": 176,
-																			"width": 103.33349609375,
+																			"width": 111.99169921875,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -114983,7 +114983,7 @@
 																				"$ref": "AAAAAAGhfD/0GqsuJuM="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarFuncion"
+																			"text": "3 : buscarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -115326,7 +115326,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfD0b06hl9nk="
 															},
-															"name": "actualizarFuncion",
+															"name": "actualizarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfD39y6n6Z4M="
 															},
@@ -115340,7 +115340,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfD0b06hl9nk="
 															},
-															"name": "buscarFuncion",
+															"name": "buscarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfD4MEqoZN8c="
 															},
@@ -116397,9 +116397,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 248,
+																			"left": 243,
 																			"top": 136,
-																			"width": 119.95166015625,
+																			"width": 128.60986328125,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -116407,7 +116407,7 @@
 																				"$ref": "AAAAAAGhfEP7Cq3QYk8="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : actualizarFuncion"
+																			"text": "2 : actualizarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -116513,9 +116513,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 529,
+																			"left": 525,
 																			"top": 161,
-																			"width": 103.33349609375,
+																			"width": 111.99169921875,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -116523,7 +116523,7 @@
 																				"$ref": "AAAAAAGhfERFUq3nd3g="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarFuncion"
+																			"text": "3 : buscarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -116746,9 +116746,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 425,
+																			"left": 420,
 																			"top": 240,
-																			"width": 101.88623046875,
+																			"width": 110.54443359375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -116756,7 +116756,7 @@
 																				"$ref": "AAAAAAGhfETuWq4U4aY="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : validarPelicula"
+																			"text": "5 : validarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -117099,7 +117099,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfEFf06twptg="
 															},
-															"name": "actualizarFuncion",
+															"name": "actualizarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfEJE6K0ENgU="
 															},
@@ -117113,7 +117113,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfEFf06twptg="
 															},
-															"name": "buscarFuncion",
+															"name": "buscarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfEJSIK0jEi4="
 															},
@@ -117142,7 +117142,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfEFf06twptg="
 															},
-															"name": "validarPelicula",
+															"name": "validarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfEJSIK0jEi4="
 															},
@@ -118199,9 +118199,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 232,
+																			"left": 227,
 																			"top": 145,
-																			"width": 119.95166015625,
+																			"width": 128.60986328125,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -118209,7 +118209,7 @@
 																				"$ref": "AAAAAAGhfEhCKbC2Czo="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : actualizarFuncion"
+																			"text": "2 : actualizarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -118315,9 +118315,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 525,
+																			"left": 521,
 																			"top": 169,
-																			"width": 103.33349609375,
+																			"width": 111.99169921875,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -118325,7 +118325,7 @@
 																				"$ref": "AAAAAAGhfEihArDNGGk="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarFuncion"
+																			"text": "3 : buscarFuncion()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -118548,9 +118548,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 409,
+																			"left": 404,
 																			"top": 233,
-																			"width": 101.88623046875,
+																			"width": 110.54443359375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -118558,7 +118558,7 @@
 																				"$ref": "AAAAAAGhfEkworD6UqI="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : validarPelicula"
+																			"text": "5 : validarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -118781,9 +118781,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 446,
+																			"left": 442,
 																			"top": 282,
-																			"width": 144.28857421875,
+																			"width": 152.94677734375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -118791,7 +118791,7 @@
 																				"$ref": "AAAAAAGhfEndMrEniaU="
 																			},
 																			"edgePosition": 1,
-																			"text": "7 : ValidarSalaDisponible"
+																			"text": "7 : ValidarSalaDisponible()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -119134,7 +119134,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfEXUE65WqtI="
 															},
-															"name": "actualizarFuncion",
+															"name": "actualizarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfEbg0a/rZ4M="
 															},
@@ -119148,7 +119148,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfEXUE65WqtI="
 															},
-															"name": "buscarFuncion",
+															"name": "buscarFuncion()",
 															"source": {
 																"$ref": "AAAAAAGhfEbuiLAKRwM="
 															},
@@ -119177,7 +119177,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfEXUE65WqtI="
 															},
-															"name": "validarPelicula",
+															"name": "validarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfEbuiLAKRwM="
 															},
@@ -119206,7 +119206,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfEXUE65WqtI="
 															},
-															"name": "ValidarSalaDisponible",
+															"name": "ValidarSalaDisponible()",
 															"source": {
 																"$ref": "AAAAAAGhfEbuiLAKRwM="
 															},
@@ -122403,9 +122403,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 292,
+																			"left": 288,
 																			"top": 144,
-																			"width": 108.39892578125,
+																			"width": 117.05712890625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -122413,7 +122413,7 @@
 																				"$ref": "AAAAAAGhYKkoU2/7dCg="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : agregarPelicula"
+																			"text": "2 : agregarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -122519,9 +122519,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 462,
+																			"left": 458,
 																			"top": 176,
-																			"width": 102.60986328125,
+																			"width": 111.26806640625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -122529,7 +122529,7 @@
 																				"$ref": "AAAAAAGhfxyxXBmiuDE="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarPelicula"
+																			"text": "3 : buscarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -122752,9 +122752,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 524,
+																			"left": 520,
 																			"top": 233,
-																			"width": 110.55078125,
+																			"width": 119.208984375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -122762,7 +122762,7 @@
 																				"$ref": "AAAAAAGhfx14jBnPG0A="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : buscarCartelera"
+																			"text": "5 : buscarCartelera()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -122985,9 +122985,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 527,
+																			"left": 522,
 																			"top": 297,
-																			"width": 105.498046875,
+																			"width": 114.15625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -122995,7 +122995,7 @@
 																				"$ref": "AAAAAAGhfx4gXBn8DUA="
 																			},
 																			"edgePosition": 1,
-																			"text": "7 : asociarPelicula"
+																			"text": "7 : asociarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -123338,7 +123338,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhYKWSRm3FVgc="
 															},
-															"name": "agregarPelicula",
+															"name": "agregarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhYKZlIm9YUBw="
 															},
@@ -123352,7 +123352,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhYKWSRm3FVgc="
 															},
-															"name": "buscarPelicula",
+															"name": "buscarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhYKZwKm93Ams="
 															},
@@ -123381,7 +123381,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhYKWSRm3FVgc="
 															},
-															"name": "buscarCartelera",
+															"name": "buscarCartelera()",
 															"source": {
 																"$ref": "AAAAAAGhYKZwKm93Ams="
 															},
@@ -123410,7 +123410,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhYKWSRm3FVgc="
 															},
-															"name": "asociarPelicula",
+															"name": "asociarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhYKZwKm93Ams="
 															},
@@ -124332,9 +124332,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 296,
+																			"left": 292,
 																			"top": 136,
-																			"width": 108.39892578125,
+																			"width": 117.05712890625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -124342,7 +124342,7 @@
 																				"$ref": "AAAAAAGhfyF6yxx7Cyg="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : agregarPelicula"
+																			"text": "2 : agregarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -124448,9 +124448,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 470,
+																			"left": 466,
 																			"top": 160,
-																			"width": 102.60986328125,
+																			"width": 111.26806640625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -124458,7 +124458,7 @@
 																				"$ref": "AAAAAAGhfyHH8xySmqc="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarPelicula"
+																			"text": "3 : buscarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -124801,7 +124801,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfx+9aBo/PUI="
 															},
-															"name": "agregarPelicula",
+															"name": "agregarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfyA1LRvTscg="
 															},
@@ -124815,7 +124815,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfx+9aBo/PUI="
 															},
-															"name": "buscarPelicula",
+															"name": "buscarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfyBA4hvyW88="
 															},
@@ -125737,9 +125737,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 296,
+																			"left": 292,
 																			"top": 144,
-																			"width": 108.39892578125,
+																			"width": 117.05712890625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -125747,7 +125747,7 @@
 																				"$ref": "AAAAAAGhfyXZax8SQ6s="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : agregarPelicula"
+																			"text": "2 : agregarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -125853,9 +125853,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 474,
+																			"left": 470,
 																			"top": 168,
-																			"width": 102.60986328125,
+																			"width": 111.26806640625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -125863,7 +125863,7 @@
 																				"$ref": "AAAAAAGhfyYg/B8pMYg="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarPelicula"
+																			"text": "3 : buscarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -126086,9 +126086,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 544,
+																			"left": 540,
 																			"top": 240,
-																			"width": 110.55078125,
+																			"width": 119.208984375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -126096,7 +126096,7 @@
 																				"$ref": "AAAAAAGhfyaEjB9Wroc="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : buscarCartelera"
+																			"text": "5 : buscarCartelera()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -126439,7 +126439,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfyP37BzWl70="
 															},
-															"name": "agregarPelicula",
+															"name": "agregarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfyRrax5qeGc="
 															},
@@ -126453,7 +126453,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfyP37BzWl70="
 															},
-															"name": "buscarPelicula",
+															"name": "buscarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfyR5Uh6JKo0="
 															},
@@ -126482,7 +126482,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfyP37BzWl70="
 															},
-															"name": "buscarCartelera",
+															"name": "buscarCartelera()",
 															"source": {
 																"$ref": "AAAAAAGhfyR5Uh6JKo0="
 															},
@@ -129562,9 +129562,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 281,
+																			"left": 277,
 																			"top": 136,
-																			"width": 111.26806640625,
+																			"width": 119.92626953125,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -129572,7 +129572,7 @@
 																				"$ref": "AAAAAAGhfyoTnCHQz9o="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : removerPelicula"
+																			"text": "2 : removerPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -129678,9 +129678,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 462,
+																			"left": 458,
 																			"top": 152,
-																			"width": 102.60986328125,
+																			"width": 111.26806640625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -129688,7 +129688,7 @@
 																				"$ref": "AAAAAAGhfypajCHnGsk="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarPelicula"
+																			"text": "3 : buscarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -130031,7 +130031,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfygyYx+Zvfo="
 															},
-															"name": "removerPelicula",
+															"name": "removerPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfyjJQiEtHnU="
 															},
@@ -130045,7 +130045,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfygyYx+Zvfo="
 															},
-															"name": "buscarPelicula",
+															"name": "buscarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfyjXiiFM7BM="
 															},
@@ -130961,9 +130961,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 314,
+																			"left": 310,
 																			"top": 136,
-																			"width": 111.26806640625,
+																			"width": 119.92626953125,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -130971,7 +130971,7 @@
 																				"$ref": "AAAAAAGhfy3RYyRh5OE="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : removerPelicula"
+																			"text": "2 : removerPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -131077,9 +131077,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 498,
+																			"left": 494,
 																			"top": 154,
-																			"width": 102.60986328125,
+																			"width": 111.26806640625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -131087,7 +131087,7 @@
 																				"$ref": "AAAAAAGhfy4OgyR4aPA="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarPelicula"
+																			"text": "3 : buscarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -131310,9 +131310,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 565,
+																			"left": 561,
 																			"top": 224,
-																			"width": 110.55078125,
+																			"width": 119.208984375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -131320,7 +131320,7 @@
 																				"$ref": "AAAAAAGhfy6ItCSlmoA="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : buscarCartelera"
+																			"text": "5 : buscarCartelera()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -131663,7 +131663,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfyvMcyIqHnA="
 															},
-															"name": "removerPelicula",
+															"name": "removerPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfyxdwiO+V/4="
 															},
@@ -131677,7 +131677,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfyvMcyIqHnA="
 															},
-															"name": "buscarPelicula",
+															"name": "buscarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfyxrESPdwps="
 															},
@@ -131706,7 +131706,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfyvMcyIqHnA="
 															},
-															"name": "buscarCartelera",
+															"name": "buscarCartelera()",
 															"source": {
 																"$ref": "AAAAAAGhfyxrESPdwps="
 															},
@@ -132625,9 +132625,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 311,
+																			"left": 307,
 																			"top": 128,
-																			"width": 111.26806640625,
+																			"width": 119.92626953125,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -132635,7 +132635,7 @@
 																				"$ref": "AAAAAAGhfzFV2icf5Fo="
 																			},
 																			"edgePosition": 1,
-																			"text": "2 : removerPelicula"
+																			"text": "2 : removerPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -132741,9 +132741,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 502,
+																			"left": 498,
 																			"top": 144,
-																			"width": 102.60986328125,
+																			"width": 111.26806640625,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -132751,7 +132751,7 @@
 																				"$ref": "AAAAAAGhfzGrkyc3E6g="
 																			},
 																			"edgePosition": 1,
-																			"text": "3 : buscarPelicula"
+																			"text": "3 : buscarPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -132974,9 +132974,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 576,
+																			"left": 572,
 																			"top": 208,
-																			"width": 110.55078125,
+																			"width": 119.208984375,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -132984,7 +132984,7 @@
 																				"$ref": "AAAAAAGhfzH+IydkWoA="
 																			},
 																			"edgePosition": 1,
-																			"text": "5 : buscarCartelera"
+																			"text": "5 : buscarCartelera()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -133207,9 +133207,9 @@
 																			},
 																			"font": "Arial;13;0",
 																			"parentStyle": false,
-																			"left": 576,
+																			"left": 572,
 																			"top": 280,
-																			"width": 111.26806640625,
+																			"width": 119.92626953125,
 																			"height": 13,
 																			"alpha": 1.5707963267948966,
 																			"distance": 10,
@@ -133217,7 +133217,7 @@
 																				"$ref": "AAAAAAGhfzKVKyeRHSw="
 																			},
 																			"edgePosition": 1,
-																			"text": "7 : removerPelicula"
+																			"text": "7 : removerPelicula()"
 																		},
 																		{
 																			"_type": "EdgeLabelView",
@@ -133560,7 +133560,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfy+G2yTooiU="
 															},
-															"name": "removerPelicula",
+															"name": "removerPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfzAcuiZ8f2o="
 															},
@@ -133574,7 +133574,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfy+G2yTooiU="
 															},
-															"name": "buscarPelicula",
+															"name": "buscarPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfzApaSabYHI="
 															},
@@ -133603,7 +133603,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfy+G2yTooiU="
 															},
-															"name": "buscarCartelera",
+															"name": "buscarCartelera()",
 															"source": {
 																"$ref": "AAAAAAGhfzApaSabYHI="
 															},
@@ -133632,7 +133632,7 @@
 															"_parent": {
 																"$ref": "AAAAAAGhfy+G2yTooiU="
 															},
-															"name": "removerPelicula",
+															"name": "removerPelicula()",
 															"source": {
 																"$ref": "AAAAAAGhfzApaSabYHI="
 															},
