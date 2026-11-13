@@ -3,16 +3,20 @@ package com.cineplus.presentacion;
 import com.cineplus.dto.PeliculaDTO;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
@@ -20,18 +24,36 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
+/**
+ * Tarjeta de una pelicula: poster, titulo y debajo el anio con el director (o el genero).
+ * Al hacer clic llama a alSeleccionar con la pelicula.
+ *
+ * @author luisf
+ */
 public final class TarjetaPelicula extends JPanel {
 
     private final LienzoPoster poster = new LienzoPoster();
     private final JLabel ficha;
 
-    public TarjetaPelicula(PeliculaDTO pelicula, CoordinadorAplicacion coordinador) {
+    public TarjetaPelicula(
+            PeliculaDTO pelicula,
+            CoordinadorAplicacion coordinador,
+            Consumer<PeliculaDTO> alSeleccionar) {
         setOpaque(false);
         setLayout(null);
         setToolTipText(pelicula.titulo());
         ficha = crearFicha(pelicula);
         add(poster);
         add(ficha);
+        if (alSeleccionar != null) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent evento) {
+                    alSeleccionar.accept(pelicula);
+                }
+            });
+        }
         cargarPoster(pelicula, coordinador);
     }
 
@@ -52,8 +74,14 @@ public final class TarjetaPelicula extends JPanel {
     private JLabel crearFicha(PeliculaDTO pelicula) {
         String anio = pelicula.fechaEstreno() != null
                 ? String.valueOf(pelicula.fechaEstreno().getYear()) : "";
-        String detalle = pelicula.genero() == null || pelicula.genero().isBlank()
-                ? anio : anio + " · " + pelicula.genero();
+        String detalle;
+        if (pelicula.director() != null && !pelicula.director().isBlank()) {
+            detalle = anio.isEmpty() ? pelicula.director() : anio + " - " + pelicula.director();
+        } else if (pelicula.genero() != null && !pelicula.genero().isBlank()) {
+            detalle = anio.isEmpty() ? pelicula.genero() : anio + " · " + pelicula.genero();
+        } else {
+            detalle = anio;
+        }
         String contenido
                 = "<html><b>"
                 + Tema.escapar(pelicula.titulo())
@@ -82,7 +110,9 @@ public final class TarjetaPelicula extends JPanel {
                 } catch (InterruptedException excepcion) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException excepcion) {
-
+                    // Se queda el lienzo "Poster no disponible" y se deja rastro en consola
+                    System.err.println("No se pudo cargar el poster de \""
+                            + pelicula.titulo() + "\": " + excepcion.getCause());
                 }
                 poster.repaint();
             }

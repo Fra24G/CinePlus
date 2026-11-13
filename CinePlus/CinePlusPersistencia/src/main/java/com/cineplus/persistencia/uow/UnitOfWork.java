@@ -1,7 +1,25 @@
 package com.cineplus.persistencia.uow;
 
 import com.cineplus.persistencia.conexion.ConexionBD;
+import com.cineplus.persistencia.dao.AsientoDAO;
+import com.cineplus.persistencia.dao.BoletoDAO;
+import com.cineplus.persistencia.dao.CineDAO;
+import com.cineplus.persistencia.dao.CompraDAO;
+import com.cineplus.persistencia.dao.FuncionDAO;
+import com.cineplus.persistencia.dao.IAsientoDAO;
+import com.cineplus.persistencia.dao.IBoletoDAO;
+import com.cineplus.persistencia.dao.ICineDAO;
+import com.cineplus.persistencia.dao.ICompraDAO;
+import com.cineplus.persistencia.dao.IFuncionDAO;
+import com.cineplus.persistencia.dao.IMembresiaDAO;
+import com.cineplus.persistencia.dao.IPeliculaDAO;
+import com.cineplus.persistencia.dao.IResenaDAO;
+import com.cineplus.persistencia.dao.ISalaDAO;
 import com.cineplus.persistencia.dao.IUsuarioDAO;
+import com.cineplus.persistencia.dao.MembresiaDAO;
+import com.cineplus.persistencia.dao.PeliculaDAO;
+import com.cineplus.persistencia.dao.ResenaDAO;
+import com.cineplus.persistencia.dao.SalaDAO;
 import com.cineplus.persistencia.dao.UsuarioDAO;
 import jakarta.persistence.EntityManager;
 
@@ -25,7 +43,18 @@ import jakarta.persistence.EntityManager;
 public class UnitOfWork implements AutoCloseable {
 
     private final EntityManager em;
+
+    // Cada DAO se crea la primera vez que se pide (creacion perezosa)
     private IUsuarioDAO usuarioDAO;
+    private ICineDAO cineDAO;
+    private ISalaDAO salaDAO;
+    private IAsientoDAO asientoDAO;
+    private IPeliculaDAO peliculaDAO;
+    private IFuncionDAO funcionDAO;
+    private IBoletoDAO boletoDAO;
+    private ICompraDAO compraDAO;
+    private IMembresiaDAO membresiaDAO;
+    private IResenaDAO resenaDAO;
 
     /** Abre un EntityManager nuevo. */
     public UnitOfWork() throws Exception {
@@ -79,11 +108,73 @@ public class UnitOfWork implements AutoCloseable {
         }
     }
 
-    /** DAO de usuarios. Comparte el EntityManager (y la transaccion) de este UnitOfWork. */
     public IUsuarioDAO usuarioDAO() {
         if (usuarioDAO == null) {
             usuarioDAO = new UsuarioDAO(em);
         }
         return usuarioDAO;
+    }
+
+    public ICineDAO cineDAO() {
+        if (cineDAO == null) {
+            cineDAO = new CineDAO(em);
+        }
+        return cineDAO;
+    }
+
+    public ISalaDAO salaDAO() {
+        if (salaDAO == null) {
+            salaDAO = new SalaDAO(em);
+        }
+        return salaDAO;
+    }
+
+    public IAsientoDAO asientoDAO() {
+        if (asientoDAO == null) {
+            asientoDAO = new AsientoDAO(em);
+        }
+        return asientoDAO;
+    }
+
+    public IPeliculaDAO peliculaDAO() {
+        if (peliculaDAO == null) {
+            peliculaDAO = new PeliculaDAO(em);
+        }
+        return peliculaDAO;
+    }
+
+    public IFuncionDAO funcionDAO() {
+        if (funcionDAO == null) {
+            funcionDAO = new FuncionDAO(em);
+        }
+        return funcionDAO;
+    }
+
+    public IBoletoDAO boletoDAO() {
+        if (boletoDAO == null) {
+            boletoDAO = new BoletoDAO(em);
+        }
+        return boletoDAO;
+    }
+
+    public ICompraDAO compraDAO() {
+        if (compraDAO == null) {
+            compraDAO = new CompraDAO(em);
+        }
+        return compraDAO;
+    }
+
+    public IMembresiaDAO membresiaDAO() {
+        if (membresiaDAO == null) {
+            membresiaDAO = new MembresiaDAO(em);
+        }
+        return membresiaDAO;
+    }
+
+    public IResenaDAO resenaDAO() {
+        if (resenaDAO == null) {
+            resenaDAO = new ResenaDAO(em);
+        }
+        return resenaDAO;
     }
 }

@@ -223,11 +223,7 @@
                 </Constraint>
               </Constraints>
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-                <Property name="columns" type="int" value="6"/>
-                <Property name="horizontalGap" type="int" value="18"/>
-                <Property name="rows" type="int" value="1"/>
-              </Layout>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
             </Container>
             <Component class="javax.swing.JLabel" name="lblSinResultados">
               <Properties>

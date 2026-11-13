@@ -1,5 +1,6 @@
 package com.cineplus.negocio.bo;
 
+import com.cineplus.dto.ActualizarPerfilDTO;
 import com.cineplus.dto.CredencialesDTO;
 import com.cineplus.dto.RegistroUsuarioDTO;
 import com.cineplus.dto.RolDTO;
@@ -67,8 +68,20 @@ public class UsuarioBO {
         }
     }
 
-    /** Convierte la entidad en DTO. El DTO nunca lleva la contrasena. */
-    private UsuarioDTO aDTO(Usuario usuario) {
+    /** Busca un usuario por id con sus puntos al dia. */
+    public UsuarioDTO obtener(Integer idUsuario) throws Exception {
+        // Lo implementa el Desarrollador 1
+        throw new Exception("Pendiente: UsuarioBO.obtener");
+    }
+
+    /** Actualiza nombre, nombre de usuario, telefono y, si viene, la contrasena. */
+    public UsuarioDTO actualizarPerfil(Integer idUsuario, ActualizarPerfilDTO datos) throws Exception {
+        // Lo implementa el Desarrollador 1
+        throw new Exception("Pendiente: UsuarioBO.actualizarPerfil");
+    }
+
+    /** Convierte la entidad en DTO. El DTO nunca lleva la contrasena. Lo reutilizan otros BO. */
+    static UsuarioDTO aDTO(Usuario usuario) {
         return new UsuarioDTO(
                 usuario.getIdUsuario(),
                 usuario.getNombre(),

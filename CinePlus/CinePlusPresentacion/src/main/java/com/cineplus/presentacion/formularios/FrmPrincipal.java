@@ -1,17 +1,25 @@
 package com.cineplus.presentacion.formularios;
 
 import com.cineplus.dto.SesionDTO;
+import com.cineplus.presentacion.CarruselPeliculas;
 import com.cineplus.presentacion.CoordinadorAplicacion;
 import com.cineplus.presentacion.PresentadorCartelera;
+import com.cineplus.presentacion.Seccion;
 import com.cineplus.presentacion.Tema;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+/**
+ * Pantalla de inicio con sesion: carrusel de peliculas, buscador, nombre del usuario y cerrar sesion.
+ *
+ * @author luisf
+ */
 public class FrmPrincipal extends JFrame {
 
     private CoordinadorAplicacion coordinador;
     private PresentadorCartelera cartelera;
+    private CarruselPeliculas carrusel;
 
     public FrmPrincipal() {
         initComponents();
@@ -30,17 +38,43 @@ public class FrmPrincipal extends JFrame {
         setTitle("CinePlus · Mi cartelera");
         txtBuscar.putClientProperty("JTextField.placeholderText", "Buscar una película…");
         txtBuscar.getAccessibleContext().setAccessibleName("Buscar película");
-        for (JButton b : new JButton[] {btnBoletos, btnHistorial, btnComunidad, btnCinePlus}) {
-            b.setEnabled(false);
+        // Barra de navegacion: Inicio es la seccion actual
+        Tema.botonPrimario(btnInicio);
+        conectar(btnBoletos, Seccion.BOLETOS);
+        conectar(btnHistorial, Seccion.HISTORIAL);
+        conectar(btnComunidad, Seccion.COMUNIDAD);
+        conectar(btnCinePlus, Seccion.CINEPLUS);
+        for (JButton b : new JButton[] {btnCartelera, btnBoletos, btnHistorial, btnComunidad, btnCinePlus}) {
+            Tema.botonSecundario(b);
         }
-        Tema.botonSecundario(btnInicio);
-        Tema.botonSecundario(btnCartelera);
+        // El nombre del usuario abre su perfil
+        lblUsuario.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+        lblUsuario.setToolTipText("Ver mi perfil");
+        lblUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evento) {
+                if (coordinador != null) {
+                    coordinador.cuenta().abrirPerfil();
+                }
+            }
+        });
+    }
+
+    /** Conecta un boton de la barra con su seccion (sin sesion, navegar abre el login). */
+    private void conectar(JButton boton, Seccion seccion) {
+        boton.addActionListener(e -> {
+            if (coordinador != null) {
+                coordinador.navegar(seccion);
+            }
+        });
     }
 
     private void cargar() {
+        carrusel = new CarruselPeliculas(coordinador, coordinador::seleccionarPelicula);
+        pnlPeliculas.add(carrusel, java.awt.BorderLayout.CENTER);
         cartelera =
                 new PresentadorCartelera(
-                        coordinador, pnlPeliculas, txtBuscar, lblEstado, lblSinResultados);
+                        coordinador, carrusel, txtBuscar, lblEstado, lblSinResultados);
         cartelera.cargar(this);
     }
 
@@ -56,8 +90,9 @@ public class FrmPrincipal extends JFrame {
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnCarteleraActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_btnCarteleraActionPerformed
-        txtBuscar.setText("");
-        txtBuscar.requestFocusInWindow();
+        if (coordinador != null) {
+            coordinador.navegar(Seccion.CARTELERA);
+        }
     }//GEN-LAST:event_btnCarteleraActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -148,7 +183,7 @@ public class FrmPrincipal extends JFrame {
 
         pnlPeliculas.setBackground(new java.awt.Color(22, 15, 23));
         pnlPeliculas.setPreferredSize(new java.awt.Dimension(1000, 350));
-        pnlPeliculas.setLayout(new java.awt.GridLayout(1, 6, 18, 0));
+        pnlPeliculas.setLayout(new java.awt.BorderLayout());
         pnlContenido.add(pnlPeliculas, java.awt.BorderLayout.CENTER);
 
         lblSinResultados.setText(" ");

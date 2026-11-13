@@ -8,9 +8,10 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Control del acceso: inicia sesion, la consulta y la cierra.
+ * Control del acceso: inicia sesion, la consulta, la exige y la cierra.
  * La sesion vive en memoria mientras la aplicacion esta abierta.
  *
+ * @author luisf
  */
 public class ControlUsuario {
 
@@ -38,5 +39,29 @@ public class ControlUsuario {
 
     public void cerrarSesion() {
         sesion = null;
+    }
+
+    /** Devuelve el usuario de la sesion o lanza una Exception si nadie ha iniciado sesion. */
+    public UsuarioDTO exigirSesion() throws Exception {
+        SesionDTO actual = sesion;
+        if (actual == null) {
+            throw new Exception("Inicia sesión para continuar.");
+        }
+        return actual.usuario();
+    }
+
+    /** Exige que haya sesion y que el usuario sea administrador. */
+    public void exigirAdmin() throws Exception {
+        if (!exigirSesion().esAdmin()) {
+            throw new Exception("Solo un administrador puede hacer esto.");
+        }
+    }
+
+    /** Reemplaza el usuario de la sesion actual (mismo idSesion) con datos nuevos. */
+    public void refrescar(UsuarioDTO usuario) {
+        SesionDTO actual = sesion;
+        if (actual != null && usuario != null) {
+            sesion = new SesionDTO(actual.idSesion(), usuario, actual.creadaEn());
+        }
     }
 }

@@ -3,12 +3,11 @@ package com.cineplus.dto;
 import java.util.List;
 
 /**
- * Lo que la pantalla manda para comprar: quien, que funcion, que asientos y como paga.
+ * Lo que la pantalla de pago manda para comprar. El usuario se toma de la sesion.
  *
  * @author luisf
  */
 public record SolicitudCompraDTO(
-        Integer idUsuario,
         Integer idFuncion,
         List<Integer> idsAsientos,
         List<String> productos,

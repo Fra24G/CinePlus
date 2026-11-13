@@ -1,16 +1,24 @@
 package com.cineplus.presentacion.formularios;
 
+import com.cineplus.presentacion.CarruselPeliculas;
 import com.cineplus.presentacion.CoordinadorAplicacion;
 import com.cineplus.presentacion.PresentadorCartelera;
+import com.cineplus.presentacion.Seccion;
 import com.cineplus.presentacion.Tema;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+/**
+ * Pantalla de inicio sin sesion: carrusel de peliculas, buscador y acceso a login y registro.
+ *
+ * @author luisf
+ */
 public class FrmInicio extends JFrame {
 
     private CoordinadorAplicacion coordinador;
     private PresentadorCartelera cartelera;
+    private CarruselPeliculas carrusel;
 
     public FrmInicio() {
         initComponents();
@@ -28,17 +36,32 @@ public class FrmInicio extends JFrame {
         setTitle("CinePlus · Inicio");
         txtBuscar.putClientProperty("JTextField.placeholderText", "Buscar una película…");
         txtBuscar.getAccessibleContext().setAccessibleName("Buscar película");
-        for (JButton b : new JButton[] {btnBoletos, btnHistorial, btnComunidad, btnCinePlus}) {
-            b.setEnabled(false);
+        // Barra de navegacion: Inicio es la seccion actual
+        Tema.botonPrimario(btnInicio);
+        conectar(btnBoletos, Seccion.BOLETOS);
+        conectar(btnHistorial, Seccion.HISTORIAL);
+        conectar(btnComunidad, Seccion.COMUNIDAD);
+        conectar(btnCinePlus, Seccion.CINEPLUS);
+        for (JButton b : new JButton[] {btnCartelera, btnBoletos, btnHistorial, btnComunidad, btnCinePlus}) {
+            Tema.botonSecundario(b);
         }
-        Tema.botonSecundario(btnInicio);
-        Tema.botonSecundario(btnCartelera);
+    }
+
+    /** Conecta un boton de la barra con su seccion (sin sesion, navegar abre el login). */
+    private void conectar(JButton boton, Seccion seccion) {
+        boton.addActionListener(e -> {
+            if (coordinador != null) {
+                coordinador.navegar(seccion);
+            }
+        });
     }
 
     private void cargar() {
+        carrusel = new CarruselPeliculas(coordinador, coordinador::seleccionarPelicula);
+        pnlPeliculas.add(carrusel, java.awt.BorderLayout.CENTER);
         cartelera =
                 new PresentadorCartelera(
-                        coordinador, pnlPeliculas, txtBuscar, lblEstado, lblSinResultados);
+                        coordinador, carrusel, txtBuscar, lblEstado, lblSinResultados);
         cartelera.cargar(this);
     }
 
@@ -47,8 +70,9 @@ public class FrmInicio extends JFrame {
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnCarteleraActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_btnCarteleraActionPerformed
-        txtBuscar.setText("");
-        txtBuscar.requestFocusInWindow();
+        if (coordinador != null) {
+            coordinador.navegar(Seccion.CARTELERA);
+        }
     }//GEN-LAST:event_btnCarteleraActionPerformed
 
     private void btnAccesoActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_btnAccesoActionPerformed
@@ -147,7 +171,7 @@ public class FrmInicio extends JFrame {
 
         pnlPeliculas.setBackground(new java.awt.Color(22, 15, 23));
         pnlPeliculas.setPreferredSize(new java.awt.Dimension(1000, 350));
-        pnlPeliculas.setLayout(new java.awt.GridLayout(1, 6, 18, 0));
+        pnlPeliculas.setLayout(new java.awt.BorderLayout());
         pnlContenido.add(pnlPeliculas, java.awt.BorderLayout.CENTER);
 
         lblSinResultados.setText(" ");

@@ -21,6 +21,11 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
+/**
+ * Mosaico decorativo de posters de las pantallas de login y registro.
+ *
+ * @author luisf
+ */
 public final class PanelPosters extends JPanel {
     private static final int LIMITE_POSTERS = 3;
     private final List<BufferedImage> imagenes = new ArrayList<>();
@@ -57,7 +62,9 @@ public final class PanelPosters extends JPanel {
                 } catch (InterruptedException excepcion) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException excepcion) {
-
+                    // Se queda la marca CinePLUS y se deja rastro en consola
+                    System.err.println("No se pudieron cargar los posters decorativos: "
+                            + excepcion.getCause());
                 }
                 repaint();
             }

@@ -8,17 +8,20 @@ import java.util.Locale;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+/**
+ * Llena el carrusel de la pantalla de inicio y lo filtra con el texto del buscador.
+ * Ya no corta en 6: el carrusel decide cuantas peliculas se ven.
+ *
+ * @author luisf
+ */
 public final class PresentadorCartelera {
 
-    private static final int TARJETAS_VISIBLES = 6;
-
     private final CoordinadorAplicacion coordinador;
-    private final JPanel contenedor;
+    private final CarruselPeliculas carrusel;
     private final JTextField buscador;
     private final JLabel estado;
     private final JLabel mensajeVacio;
@@ -26,12 +29,12 @@ public final class PresentadorCartelera {
 
     public PresentadorCartelera(
             CoordinadorAplicacion coordinador,
-            JPanel contenedor,
+            CarruselPeliculas carrusel,
             JTextField buscador,
             JLabel estado,
             JLabel mensajeVacio) {
         this.coordinador = coordinador;
-        this.contenedor = contenedor;
+        this.carrusel = carrusel;
         this.buscador = buscador;
         this.estado = estado;
         this.mensajeVacio = mensajeVacio;
@@ -42,12 +45,17 @@ public final class PresentadorCartelera {
         coordinador.cargarCartelera(ventana, this::mostrarCatalogo);
     }
 
+    /** Guarda las peliculas y, si no estan en vivo, muestra el motivo real que dio el servicio. */
     private void mostrarCatalogo(CarteleraDTO catalogo) {
         peliculas = catalogo.peliculas();
-        estado.setText(
-                catalogo.enVivo()
-                        ? ""
-                        : "Mostrando películas de muestra. No se pudo actualizar la cartelera.");
+        if (catalogo.enVivo()) {
+            estado.setText("");
+        } else {
+            // estado() trae el motivo real, por ejemplo "TMDB rechazo la clave"
+            estado.setText(catalogo.estado() == null || catalogo.estado().isBlank()
+                    ? "Mostrando películas de muestra. No se pudo actualizar la cartelera."
+                    : catalogo.estado());
+        }
         estado.setVisible(!catalogo.enVivo());
         actualizarTarjetas();
     }
@@ -75,19 +83,8 @@ public final class PresentadorCartelera {
 
     private void actualizarTarjetas() {
         List<PeliculaDTO> visibles = filtrar(peliculas, buscador.getText());
-        contenedor.removeAll();
-        for (PeliculaDTO pelicula : visibles) {
-            contenedor.add(new TarjetaPelicula(pelicula, coordinador));
-        }
-
-        for (int indice = visibles.size(); indice < TARJETAS_VISIBLES; indice++) {
-            JPanel espacio = new JPanel();
-            espacio.setOpaque(false);
-            contenedor.add(espacio);
-        }
+        carrusel.mostrar(visibles);
         mostrarEstadoVacio(visibles.isEmpty());
-        contenedor.revalidate();
-        contenedor.repaint();
     }
 
     private void mostrarEstadoVacio(boolean sinResultados) {
@@ -100,11 +97,11 @@ public final class PresentadorCartelera {
         }
     }
 
+    /** Filtra por titulo sin distinguir mayusculas. Ya no limita a 6. */
     static List<PeliculaDTO> filtrar(List<PeliculaDTO> peliculas, String busqueda) {
         String criterio = busqueda.strip().toLowerCase(Locale.ROOT);
         return peliculas.stream()
                 .filter(pelicula -> pelicula.titulo().toLowerCase(Locale.ROOT).contains(criterio))
-                .limit(TARJETAS_VISIBLES)
                 .toList();
     }
 }

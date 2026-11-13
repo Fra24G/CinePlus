@@ -2,6 +2,7 @@ package com.cineplus.servicio;
 
 import com.cineplus.dto.CarteleraDTO;
 import com.cineplus.dto.PeliculaDTO;
+import com.cineplus.dto.PeliculaExternaDTO;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -89,6 +90,24 @@ public class ServicioPeliculasTmdb implements IServicioPeliculas {
     @Override
     public byte[] obtenerPoster(PeliculaDTO pelicula) {
         return posters.obtener(pelicula);
+    }
+
+    @Override
+    public PeliculaExternaDTO obtenerDetalle(String idExterno) throws Exception {
+        // Lo implementa el Desarrollador 2
+        throw new Exception("Pendiente: ServicioPeliculasTmdb.obtenerDetalle");
+    }
+
+    @Override
+    public List<PeliculaDTO> buscar(String texto) throws Exception {
+        // Lo implementa el Desarrollador 2
+        throw new Exception("Pendiente: ServicioPeliculasTmdb.buscar");
+    }
+
+    @Override
+    public String guardarPosterLocal(byte[] imagen, String nombreArchivo) throws Exception {
+        // Lo implementa el Desarrollador 2
+        throw new Exception("Pendiente: ServicioPeliculasTmdb.guardarPosterLocal");
     }
 
     // ---------- consulta a TMDB ----------
@@ -185,9 +204,11 @@ public class ServicioPeliculasTmdb implements IServicioPeliculas {
     // ---------- utilidades ----------
     private static PeliculaDTO crearPelicula(int id, String titulo, String genero,
             LocalDate estreno, String sinopsis, String imagen) {
+        // Pelicula de TMDB: todavia no esta en la BD, por eso idPelicula va en null
+        // y el id de TMDB viaja en idExterno.
         // Los datos que TMDB no da en la lista (director, duracion, clasificacion) van vacios
-        return new PeliculaDTO(id, titulo, "", genero, 0, estreno, "", sinopsis, imagen,
-                true, null, null);
+        return new PeliculaDTO(null, String.valueOf(id), titulo, "", genero, 0, estreno, "",
+                sinopsis, imagen, true, null, null);
     }
 
     private static String leerTexto(JsonObject datos, String campo) {
