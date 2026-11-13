@@ -1,23 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.cineplus.entidades;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
+
 /**
+ * Membresia contratada por un usuario (por ejemplo CinePLUS Pro).
  *
  * @author luisf
  */
-/** Membresia CinePLUS Pro contratada por un usuario. */
 @Entity
 @Table(name = "membresias")
 public class Membresia {
@@ -34,7 +24,7 @@ public class Membresia {
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDateTime fechaInicio;
 
-    @Column(name = "fecha_vencimiento", nullable = false)
+    @Column(name = "fecha_vencimiento")
     private LocalDateTime fechaVencimiento;
 
     @Column(nullable = false)
@@ -43,12 +33,11 @@ public class Membresia {
     @Column(name = "nombre_plan", nullable = false, length = 50)
     private String nombrePlan;
 
-    @Column(name = "precio_mensual", nullable = false)
+    @Column(name = "precio_mensual")
     private Double precioMensual;
 
     @Column(length = 500)
     private String beneficios;
-
     public Membresia() {
     }
 

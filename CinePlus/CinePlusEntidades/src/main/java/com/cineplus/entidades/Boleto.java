@@ -1,20 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.cineplus.entidades;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 
 /**
+ * Boleto de una compra: un asiento en una funcion, con su codigo unico para el
+ * QR.
  *
  * @author luisf
  */
@@ -22,8 +12,7 @@ import jakarta.persistence.UniqueConstraint;
  * Un boleto: un asiento de una funcion, dentro de una compra.
  */
 @Entity
-@Table(name = "boletos",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"id_funcion", "id_asiento"}))
+@Table(name = "boletos")
 public class Boleto {
 
     @Id
@@ -44,7 +33,7 @@ public class Boleto {
     private Asiento asiento;
 
     // Codigo unico que lleva el QR
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true, length = 60)
     private String codigo;
 
     @Column(nullable = false)

@@ -1,25 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.cineplus.entidades;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
 /**
+ * Resena de un usuario sobre una pelicula, con calificacion de 1 a 5.
  *
  * @author luisf
- */
-/**
- * Resena de un usuario sobre una pelicula. Es local, no viene de TMDB.
  */
 @Entity
 @Table(name = "resenas")
@@ -42,12 +29,11 @@ public class Resena {
     @Column(nullable = false)
     private Integer calificacion;
 
-    @Column(length = 1000)
+    @Column(length = 500)
     private String comentario;
 
     @Column(nullable = false)
     private LocalDateTime fecha;
-
     public Resena() {
     }
 

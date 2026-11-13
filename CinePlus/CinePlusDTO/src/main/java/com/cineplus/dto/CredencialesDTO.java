@@ -7,5 +7,5 @@ package com.cineplus.dto;
  */
 public record CredencialesDTO(
         String correo,
-        String contrasena) {
+        char[]  contrasena) {
 }

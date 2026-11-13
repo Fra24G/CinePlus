@@ -1,20 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.cineplus.entidades;
+
 import com.cineplus.entidades.enums.TipoAsiento;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 /**
+ * Asiento de una sala. Puede ser Clasico o VIP.
  *
  * @author luisf
  */
@@ -31,7 +21,7 @@ public class Asiento {
     @JoinColumn(name = "id_sala", nullable = false)
     private Sala sala;
 
-    @Column(nullable = false, length = 2)
+    @Column(nullable = false, length = 5)
     private String fila;
 
     @Column(nullable = false)

@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.cineplus.entidades;
 
 import com.cineplus.entidades.enums.Rol;
+import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,13 +10,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 
 /**
+ * Persona que usa el sistema: cliente o administrador.
  *
  * @author luisf
  */
-/** Persona que usa el sistema, cliente o administrador. */
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -59,12 +55,11 @@ public class Usuario {
     public Usuario() {
     }
 
-    /** Nombre que se muestra en pantalla: el apodo si existe, si no el nombre. */
+    /**
+     * Apodo si existe, si no el nombre.
+     */
     public String getNombreMostrado() {
-        if (nombreUsuario != null && !nombreUsuario.isBlank()) {
-            return nombreUsuario;
-        }
-        return nombre;
+        return (nombreUsuario != null && !nombreUsuario.isBlank()) ? nombreUsuario : nombre;
     }
 
     public Integer getIdUsuario() {

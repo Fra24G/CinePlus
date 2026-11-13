@@ -1,6 +1,5 @@
 package com.cineplus.persistencia.conexion;
 
-import com.cineplus.persistencia.excepciones.PersistenciaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -40,14 +39,14 @@ public final class ConexionBD {
      *
      * @throws PersistenciaException si no se puede conectar con la base de datos
      */
-    public synchronized EntityManager crearEntityManager() throws PersistenciaException {
+    public synchronized EntityManager crearEntityManager() throws Exception {
         if (fabrica == null || !fabrica.isOpen()) {
             fabrica = crearFabrica();
         }
         try {
             return fabrica.createEntityManager();
         } catch (PersistenceException | IllegalStateException e) {
-            throw new PersistenciaException("No se pudo abrir la conexion con la base de datos", e);
+            throw new Exception("No se pudo abrir la conexion con la base de datos", e);
         }
     }
 
@@ -59,11 +58,11 @@ public final class ConexionBD {
         fabrica = null;
     }
 
-    private EntityManagerFactory crearFabrica() throws PersistenciaException {
+    private EntityManagerFactory crearFabrica() throws Exception {
         try {
             return Persistence.createEntityManagerFactory(UNIDAD_PERSISTENCIA);
         } catch (PersistenceException e) {
-            throw new PersistenciaException(
+            throw new Exception(
                     "No se pudo conectar con la base de datos. Revisa MySQL.", e);
         }
     }

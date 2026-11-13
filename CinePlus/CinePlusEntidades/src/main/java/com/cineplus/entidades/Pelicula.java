@@ -1,19 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.cineplus.entidades;
+
 import com.cineplus.entidades.enums.Clasificacion;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import java.time.LocalDate;
+import jakarta.persistence.*;
+
 /**
+ * Pelicula de la cartelera local (importada del catalogo externo).
  *
  * @author luisf
  */
@@ -27,16 +19,16 @@ public class Pelicula {
     private Integer idPelicula;
 
     // Id de la pelicula en TMDB, para no importarla dos veces
-    @Column(name = "id_externo", unique = true, length = 20)
+    @Column(name = "id_externo", unique = true, length = 30)
     private String idExterno;
 
-    @Column(nullable = false, length = 150)
+    @Column(nullable = false, length = 200)
     private String titulo;
 
-    @Column(length = 200)
+    @Column(length = 120)
     private String director;
 
-    @Column(length = 100)
+    @Column(length = 60)
     private String genero;
 
     @Column(name = "duracion_minutos")
@@ -64,7 +56,6 @@ public class Pelicula {
 
     @Column(name = "fin_cartelera")
     private LocalDate finCartelera;
-
     public Pelicula() {
     }
 

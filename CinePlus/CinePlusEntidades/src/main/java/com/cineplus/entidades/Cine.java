@@ -1,23 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.cineplus.entidades;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
+
 /**
+ * Sucursal de cine.
  *
  * @author luisf
  */
 @Entity
-@Table(name = "cines",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"nombre", "ciudad"}))
+@Table(name = "cines")
 public class Cine {
 
     @Id
@@ -25,10 +16,10 @@ public class Cine {
     @Column(name = "id_cine")
     private Integer idCine;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 100)
     private String ciudad;
 
     public Cine() {
@@ -39,9 +30,11 @@ public class Cine {
         this.ciudad = ciudad;
     }
 
-    /** Ejemplo: "Cd. Obregon - Cine 1". */
+    /**
+     * Ejemplo: "CinePLUS Centro - Ciudad Obregon".
+     */
     public String getNombreCompleto() {
-        return ciudad + " - " + nombre;
+        return nombre + " - " + ciudad;
     }
 
     public Integer getIdCine() {

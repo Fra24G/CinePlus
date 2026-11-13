@@ -1,0 +1,50 @@
+[
+  {
+    "id": 157336,
+    "titulo": "Interestelar",
+    "estreno": "2014",
+    "posterPath": "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+    "genero": "Ciencia ficción",
+    "recursoLocal": "interestelar.jpg"
+  },
+  {
+    "id": 414906,
+    "titulo": "Batman",
+    "estreno": "2022",
+    "posterPath": "/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+    "genero": "Suspenso",
+    "recursoLocal": "batman.jpg"
+  },
+  {
+    "id": 27205,
+    "titulo": "El origen",
+    "estreno": "2010",
+    "posterPath": "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
+    "genero": "Ciencia ficción",
+    "recursoLocal": "el-origen.jpg"
+  },
+  {
+    "id": 862,
+    "titulo": "Toy Story",
+    "estreno": "1995",
+    "posterPath": "/uXDfjJbdP4ijW5hWSBrPrlKpxab.jpg",
+    "genero": "Animación",
+    "recursoLocal": "toy-story.jpg"
+  },
+  {
+    "id": 354912,
+    "titulo": "Coco",
+    "estreno": "2017",
+    "posterPath": "/gGEsBPAijhVUFoiNpgZXqRVWJt2.jpg",
+    "genero": "Animación",
+    "recursoLocal": "coco.jpg"
+  },
+  {
+    "id": 438631,
+    "titulo": "Duna",
+    "estreno": "2021",
+    "posterPath": "/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
+    "genero": "Aventura",
+    "recursoLocal": "duna.jpg"
+  }
+]

@@ -1,26 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.cineplus.entidades;
 
 import com.cineplus.entidades.enums.FormatoFuncion;
 import com.cineplus.entidades.enums.TipoFuncion;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;/**
+import java.time.LocalDateTime;
+import jakarta.persistence.*;
+
+/**
+ * Una proyeccion de una pelicula en una sala, en una fecha y hora.
+ * tipo es el idioma (Espanol o Subtitulada) y formato es 2D o 3D.
  *
  * @author luisf
  */
-/** Una proyeccion de una pelicula en una sala, a una hora. */
 @Entity
 @Table(name = "funciones")
 public class Funcion {
@@ -41,16 +31,13 @@ public class Funcion {
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
-    // Idioma: Espanol o Subtitulada
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private TipoFuncion tipo;
 
-    // Formato: 2D o 3D
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 20)
     private FormatoFuncion formato;
-
     public Funcion() {
     }
 
