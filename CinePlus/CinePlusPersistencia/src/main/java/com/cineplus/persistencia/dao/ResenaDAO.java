@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Implementacion JPA del DAO de resenas.
  *
- * @author luisf
+ * @author Alec Enrique Navarro Gonzalez
  */
 public class ResenaDAO implements IResenaDAO {
 
@@ -33,31 +33,70 @@ public class ResenaDAO implements IResenaDAO {
 
     @Override
     public List<Resena> listarRecientes(int pagina, int tamano) throws Exception {
-        // Lo implementa el Desarrollador 5
-        throw new Exception("Pendiente: ResenaDAO.listarRecientes");
+        try {
+            return em.createQuery(
+                    "SELECT r FROM Resena r ORDER BY r.fecha DESC",
+                    Resena.class)
+                    .setFirstResult(pagina * tamano)
+                    .setMaxResults(tamano)
+                    .getResultList();
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 
     @Override
     public long contarTodas() throws Exception {
-        // Lo implementa el Desarrollador 5
-        throw new Exception("Pendiente: ResenaDAO.contarTodas");
+        try {
+            return em.createQuery(
+                    "SELECT COUNT(r) FROM Resena r",
+                    Long.class)
+                    .getSingleResult();
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 
     @Override
     public List<Resena> listarPorPelicula(Integer idPelicula, int pagina, int tamano) throws Exception {
-        // Lo implementa el Desarrollador 5
-        throw new Exception("Pendiente: ResenaDAO.listarPorPelicula");
+        try {
+            return em.createQuery(
+                    "SELECT r FROM Resena r WHERE r.pelicula.idPelicula = :idPelicula ORDER BY r.fecha DESC",
+                    Resena.class)
+                    .setParameter("idPelicula", idPelicula)
+                    .setFirstResult(pagina * tamano)
+                    .setMaxResults(tamano)
+                    .getResultList();
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 
     @Override
     public long contarPorPelicula(Integer idPelicula) throws Exception {
-        // Lo implementa el Desarrollador 5
-        throw new Exception("Pendiente: ResenaDAO.contarPorPelicula");
+        try {
+            return em.createQuery(
+                    "SELECT COUNT(r) FROM Resena r WHERE r.pelicula.idPelicula = :idPelicula",
+                    Long.class)
+                    .setParameter("idPelicula", idPelicula)
+                    .getSingleResult();
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 
     @Override
     public boolean existeDeUsuario(Integer idUsuario, Integer idPelicula) throws Exception {
-        // Lo implementa el Desarrollador 5
-        throw new Exception("Pendiente: ResenaDAO.existeDeUsuario");
+        try {
+            Long total = em.createQuery(
+                    "SELECT COUNT(r) FROM Resena r WHERE r.usuario.idUsuario = :idUsuario AND r.pelicula.idPelicula = :idPelicula",
+                    Long.class)
+                    .setParameter("idUsuario", idUsuario)
+                    .setParameter("idPelicula", idPelicula)
+                    .getSingleResult();
+            return total != null && total > 0;
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 }
