@@ -18,29 +18,34 @@ import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
-
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 /**
- * Nucleo de la presentacion: arranque, cambio de ventana, tareas en segundo plano y
- * navegacion entre secciones. Cada modulo tiene su propio coordinador (cartelera, compra,
- * boletos, comunidad, admin y cuenta) para que los integrantes no se pisen.
+ * Nucleo de la presentacion: arranque, cambio de ventana, tareas en segundo
+ * plano y navegacion entre secciones. Cada modulo tiene su propio coordinador
+ * (cartelera, compra, boletos, comunidad, admin y cuenta) para que los
+ * integrantes no se pisen.
  *
  * @author luisf
  */
 public final class CoordinadorAplicacion {
 
-    /** Tarea que puede lanzar Exception (un Supplier normal no puede). */
+    /**
+     * Tarea que puede lanzar Exception (un Supplier normal no puede).
+     */
     @FunctionalInterface
     interface Tarea<T> {
+
         T ejecutar() throws Exception;
     }
 
-    private static final String MENSAJE_GENERICO =
-            "No fue posible completar la operación. Inténtalo nuevamente.";
+    private static final String MENSAJE_GENERICO
+            = "No fue posible completar la operación. Inténtalo nuevamente.";
 
     private final FachadaNegocio fachada;
     private final CoordinadorCartelera cartelera;
@@ -65,10 +70,10 @@ public final class CoordinadorAplicacion {
     }
 
     // ---------- Arranque y navegacion ----------
-
     /**
-     * La primera vez carga los datos semilla en segundo plano (si la BD esta vacia) y
-     * despues muestra la pantalla de inicio. Las siguientes veces solo cambia de pantalla.
+     * La primera vez carga los datos semilla en segundo plano (si la BD esta
+     * vacia) y despues muestra la pantalla de inicio. Las siguientes veces solo
+     * cambia de pantalla.
      */
     public void inicio() {
         if (datosInicializados) {
@@ -76,6 +81,15 @@ public final class CoordinadorAplicacion {
             return;
         }
         datosInicializados = true;
+
+        // Ventana temporal: mantiene viva la aplicación mientras cargan los datos
+        JFrame cargando = new JFrame("CinePlus");
+        cargando.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        cargando.add(new JLabel("Cargando CinePlus...", SwingConstants.CENTER));
+        cargando.setSize(360, 160);
+        cargando.setLocationRelativeTo(null);
+        cambiar(cargando);
+
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
@@ -110,27 +124,38 @@ public final class CoordinadorAplicacion {
         cambiar(sesion() == null ? new FrmInicio(this) : new FrmPrincipal(this));
     }
 
-    /** Lleva a la seccion de la barra de navegacion. Si pide sesion y no hay, abre el login. */
+    /**
+     * Lleva a la seccion de la barra de navegacion. Si pide sesion y no hay,
+     * abre el login.
+     */
     public void navegar(Seccion seccion) {
         if (seccion.requiereSesion() && sesion() == null) {
             login();
             return;
         }
         switch (seccion) {
-            case INICIO -> inicio();
-            case CARTELERA -> cartelera.abrir();
-            case BOLETOS -> boletos.abrirBoletos();
-            case HISTORIAL -> boletos.abrirHistorial();
-            case COMUNIDAD -> comunidad.abrir();
-            case CINEPLUS -> cuenta.abrirMembresia();
-            case PERFIL -> cuenta.abrirPerfil();
+            case INICIO ->
+                inicio();
+            case CARTELERA ->
+                cartelera.abrir();
+            case BOLETOS ->
+                boletos.abrirBoletos();
+            case HISTORIAL ->
+                boletos.abrirHistorial();
+            case COMUNIDAD ->
+                comunidad.abrir();
+            case CINEPLUS ->
+                cuenta.abrirMembresia();
+            case PERFIL ->
+                cuenta.abrirPerfil();
         }
     }
 
     /**
-     * Clic en una pelicula del carrusel. Sin sesion abre el login. Con sesion: si esta en
-     * cartelera abre sus funciones; si solo esta en el catalogo abre sus resenas; si no
-     * existe en la BD abre las resenas con la pelicula de TMDB.
+     * Clic en una pelicula del carrusel. Sin sesion abre el login. Con sesion:
+     * si esta en cartelera abre sus funciones; si solo esta en el catalogo abre
+     * sus resenas; si no existe en la BD abre las resenas con la pelicula de
+     * TMDB.
      */
     public void seleccionarPelicula(PeliculaDTO pelicula) {
         if (sesion() == null) {
@@ -162,8 +187,11 @@ public final class CoordinadorAplicacion {
                 this::avisar);
     }
 
-    /** Resultado de buscar la pelicula seleccionada en la BD. */
+    /**
+     * Resultado de buscar la pelicula seleccionada en la BD.
+     */
     private record Seleccion(PeliculaDTO pelicula, boolean enCartelera) {
+
     }
 
     public void login() {
@@ -174,7 +202,10 @@ public final class CoordinadorAplicacion {
         cambiar(new FrmRegistro(this));
     }
 
-    /** Pantalla generica de exito con cuenta regresiva; al terminar ejecuta alTerminar. */
+    /**
+     * Pantalla generica de exito con cuenta regresiva; al terminar ejecuta
+     * alTerminar.
+     */
     public void confirmar(String mensaje, Runnable alTerminar) {
         cambiar(new FrmConfirmacion(this, mensaje, alTerminar));
     }
@@ -189,7 +220,6 @@ public final class CoordinadorAplicacion {
     }
 
     // ---------- Coordinadores de modulo ----------
-
     public CoordinadorCartelera cartelera() {
         return cartelera;
     }
@@ -215,18 +245,23 @@ public final class CoordinadorAplicacion {
     }
 
     // ---------- Herramientas para los coordinadores de modulo ----------
-
-    /** La Fachada, para que los coordinadores de modulo la usen. */
+    /**
+     * La Fachada, para que los coordinadores de modulo la usen.
+     */
     FachadaNegocio fachada() {
         return fachada;
     }
 
-    /** La ventana que se esta mostrando. */
+    /**
+     * La ventana que se esta mostrando.
+     */
     JFrame ventana() {
         return ventana;
     }
 
-    /** Muestra la ventana nueva y cierra la anterior. */
+    /**
+     * Muestra la ventana nueva y cierra la anterior.
+     */
     void cambiar(JFrame nueva) {
         JFrame anterior = ventana;
         ventana = nueva;
@@ -236,18 +271,21 @@ public final class CoordinadorAplicacion {
         }
     }
 
-    /** Muestra un aviso sobre la ventana actual. */
+    /**
+     * Muestra un aviso sobre la ventana actual.
+     */
     void avisar(String mensaje) {
         JOptionPane.showMessageDialog(ventana, mensaje, "CinePlus", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    /** Aviso de las pantallas que su integrante todavia no termina. */
+    /**
+     * Aviso de las pantallas que su integrante todavia no termina.
+     */
     void proximamente(String pantalla) {
         avisar(pantalla + ": próximamente.");
     }
 
     // ---------- Cuenta ----------
-
     public void registrar(FrmRegistro vista, RegistroUsuarioDTO datos) {
         vista.ocupado(true);
         ejecutar(
@@ -287,8 +325,9 @@ public final class CoordinadorAplicacion {
     }
 
     // ---------- Cartelera de inicio ----------
-
-    /** Carga la cartelera una sola vez y despues reutiliza la copia guardada. */
+    /**
+     * Carga la cartelera una sola vez y despues reutiliza la copia guardada.
+     */
     public void cargarCartelera(JFrame destino, Consumer<CarteleraDTO> recibir) {
         if (carteleraCache != null) {
             SwingUtilities.invokeLater(
@@ -315,8 +354,9 @@ public final class CoordinadorAplicacion {
     }
 
     /**
-     * Peliculas para el mosaico decorativo de login y registro. Usa la copia guardada; si no
-     * hay, consulta una sola vez y la guarda. Se llama desde un hilo de fondo.
+     * Peliculas para el mosaico decorativo de login y registro. Usa la copia
+     * guardada; si no hay, consulta una sola vez y la guarda. Se llama desde un
+     * hilo de fondo.
      */
     public CarteleraDTO catalogoDecorativo() {
         CarteleraDTO catalogo = carteleraCache;
@@ -328,11 +368,10 @@ public final class CoordinadorAplicacion {
     }
 
     // ---------- Segundo plano ----------
-
     /**
-     * Ejecuta una tarea fuera del hilo de Swing. Si sale bien llama a exito; si falla llama
-     * a error con el mensaje de la Exception (los errores internos muestran un mensaje generico).
-     * Si destino ya se cerro no llama a nada.
+     * Ejecuta una tarea fuera del hilo de Swing. Si sale bien llama a exito; si
+     * falla llama a error con el mensaje de la Exception (los errores internos
+     * muestran un mensaje generico). Si destino ya se cerro no llama a nada.
      */
     <T> void ejecutar(JFrame destino, Tarea<T> tarea, Consumer<T> exito, Consumer<String> error) {
         new SwingWorker<T, Void>() {
@@ -362,7 +401,10 @@ public final class CoordinadorAplicacion {
         }.execute();
     }
 
-    /** Solo se muestra el mensaje de nuestras Exception; un error interno muestra el generico. */
+    /**
+     * Solo se muestra el mensaje de nuestras Exception; un error interno
+     * muestra el generico.
+     */
     private static String mensajeDe(Throwable causa) {
         if (causa == null || causa instanceof RuntimeException || causa.getMessage() == null) {
             if (causa != null) {
