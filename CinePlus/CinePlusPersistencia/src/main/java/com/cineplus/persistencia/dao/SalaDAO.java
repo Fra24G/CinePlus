@@ -33,11 +33,25 @@ public class SalaDAO implements ISalaDAO {
         }
     }
 
-    @Override
-    public List<Sala> listarPorCine(Integer idCine) throws Exception {
-        // Lo implementa el Desarrollador 2
-        throw new Exception("Pendiente: SalaDAO.listarPorCine");
+    
+@Override
+public List<Sala> listarPorCine(Integer idCine) throws Exception {
+    try {
+        // Busca las salas que pertenecen al cine indicado
+        // Se ordenan por numero de sala
+        return em.createQuery(
+                "SELECT s FROM Sala s "
+                + "WHERE s.cine.idCine = :idCine "
+                + "ORDER BY s.numeroSala",
+                Sala.class)
+                .setParameter("idCine", idCine)
+                .getResultList();
+
+    } catch (RuntimeException e) {
+        throw new Exception(MENSAJE_ERROR, e);
     }
+}
+
 
     @Override
     public Optional<Sala> buscarPorId(Integer idSala) throws Exception {
