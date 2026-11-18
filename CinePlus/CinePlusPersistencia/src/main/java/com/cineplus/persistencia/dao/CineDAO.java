@@ -32,11 +32,21 @@ public class CineDAO implements ICineDAO {
         }
     }
 
-    @Override
-    public List<Cine> listarTodos() throws Exception {
-        // Lo implementa el Desarrollador 2
-        throw new Exception("Pendiente: CineDAO.listarTodos");
+    
+@Override
+public List<Cine> listarTodos() throws Exception {
+    try {
+        // Consulta todos los cines y los ordena por nombre
+        return em.createQuery(
+                "SELECT c FROM Cine c ORDER BY c.nombre",
+                Cine.class)
+                .getResultList();
+
+    } catch (RuntimeException e) {
+        throw new Exception(MENSAJE_ERROR, e);
     }
+}
+
 
     @Override
     public Optional<Cine> buscarPorId(Integer idCine) throws Exception {

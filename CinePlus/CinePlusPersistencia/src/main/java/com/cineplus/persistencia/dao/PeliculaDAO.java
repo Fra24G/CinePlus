@@ -1,3 +1,4 @@
+
 package com.cineplus.persistencia.dao;
 
 import com.cineplus.entidades.Pelicula;
@@ -7,9 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implementacion JPA del DAO de peliculas.
- *
- * @author luisf
+ * DAO encargado de consultar y guardar peliculas en la base de dato
  */
 public class PeliculaDAO implements IPeliculaDAO {
 
@@ -35,8 +34,14 @@ public class PeliculaDAO implements IPeliculaDAO {
 
     @Override
     public Pelicula actualizar(Pelicula pelicula) throws Exception {
-        // Lo implementa el Desarrollador 2
-        throw new Exception("Pendiente: PeliculaDAO.actualizar");
+        try {
+            // merge actualiza una pelicula que ya existe
+            Pelicula actualizada = em.merge(pelicula);
+            em.flush();
+            return actualizada;
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 
     @Override
@@ -50,25 +55,68 @@ public class PeliculaDAO implements IPeliculaDAO {
 
     @Override
     public Optional<Pelicula> buscarPorIdExterno(String idExterno) throws Exception {
-        // Lo implementa el Desarrollador 2
-        throw new Exception("Pendiente: PeliculaDAO.buscarPorIdExterno");
+        try {
+            // Busca una pelicula utilizando su identificador de TMDB
+            List<Pelicula> resultados = em.createQuery(
+                    "SELECT p FROM Pelicula p WHERE p.idExterno = :id",
+                    Pelicula.class)
+                    .setParameter("id", idExterno)
+                    .getResultList();
+
+            return resultados.stream().findFirst();
+
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 
     @Override
     public List<Pelicula> listarEnCartelera(LocalDate fecha) throws Exception {
-        // Lo implementa el Desarrollador 2
-        throw new Exception("Pendiente: PeliculaDAO.listarEnCartelera");
+        try {
+            // Solo muestra peliculas disponibles dentro de su periodo de cartelera
+            return em.createQuery(
+                    "SELECT p FROM Pelicula p "
+                    + "WHERE p.disponible = true "
+                    + "AND (p.inicioCartelera IS NULL OR p.inicioCartelera <= :fecha) "
+                    + "AND (p.finCartelera IS NULL OR p.finCartelera >= :fecha) "
+                    + "ORDER BY p.titulo",
+                    Pelicula.class)
+                    .setParameter("fecha", fecha)
+                    .getResultList();
+
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 
     @Override
     public List<Pelicula> listarTodas() throws Exception {
-        // Lo implementa el Desarrollador 2
-        throw new Exception("Pendiente: PeliculaDAO.listarTodas");
+        try {
+            // devuelve todo el catalogo ordenado alfabeticamente
+            return em.createQuery(
+                    "SELECT p FROM Pelicula p ORDER BY p.titulo",
+                    Pelicula.class)
+                    .getResultList();
+
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 
     @Override
     public List<Pelicula> buscarPorTitulo(String texto) throws Exception {
-        // Lo implementa el Desarrollador 2
-        throw new Exception("Pendiente: PeliculaDAO.buscarPorTitulo");
+        try {
+            // el lower permite buscar sin importar mayusculas o minusculas
+            return em.createQuery(
+                    "SELECT p FROM Pelicula p "
+                    + "WHERE LOWER(p.titulo) LIKE :texto "
+                    + "ORDER BY p.titulo",
+                    Pelicula.class)
+                    .setParameter("texto", "%" + texto.toLowerCase().trim() + "%")
+                    .getResultList();
+
+        } catch (RuntimeException e) {
+            throw new Exception(MENSAJE_ERROR, e);
+        }
     }
 }
