@@ -32,16 +32,21 @@ public class MembresiaBO {
             + "preventas anticipadas y funciones exclusivas.";
 
     /**
-     * Los dos planes fijos del Figma. No consulta la BD.
+     * Los dos planes fijos del Figma con sus vinetas exactas. No consulta la BD.
      */
     public List<PlanDTO> listarPlanes() {
         return List.of(
                 new PlanDTO(PLAN_GRATIS, 0.0,
-                        "Encuentra tus boletos de forma sencilla. Acumula puntos en todas tus compras. "
-                        + "Accede a la comunidad CinePlus: lee y publica reseñas.", true),
+                        "Beneficios únicos por registrarte en CinePlus\n"
+                        + "Encuentra tus boletos de forma sencilla\n"
+                        + "Acumula puntos en todas tus compras\n"
+                        + "Accede a nuestra comunidad CinePlus, lee, publica reseñas.", true),
                 new PlanDTO(PLAN_PRO, PRECIO_PRO,
-                        "Todo lo de CinePLUS+ y además: más puntos por tus compras, sin comisión por uso "
-                        + "del servicio, preventas anticipadas y funciones exclusivas.", false));
+                        "Recibe más puntos por tus compras\n"
+                        + "Sin comisión por uso del servicio\n"
+                        + "Preventas anticipadas\n"
+                        + "Funciones exclusivas\n"
+                        + "¡Mucho más!", false));
     }
 
     /**

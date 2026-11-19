@@ -5,38 +5,32 @@ import com.cineplus.dto.PeliculaDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
- * Carrusel de peliculas de la pantalla de inicio. Muestra 4 tarjetas completas y una
- * parcial y atenuada a cada lado, como en el Figma. Avanza con las flechas o con la rueda
- * del mouse y es circular. Reemplaza la cuadricula fija de 6 tarjetas.
+ * Carrusel de peliculas de la pantalla de inicio. Muestra 4 tarjetas completas en el
+ * centro y una tarjeta parcial y atenuada cortada en cada extremo (izquierdo y derecho),
+ * como en el Figma. Avanza al hacer clic en las tarjetas parciales de los extremos o con
+ * la rueda del mouse y es circular.
  *
  * @author luisf
  */
 public final class CarruselPeliculas extends JPanel {
 
     private static final int VISIBLES = 4;
-    private static final int SEPARACION = 18;
-    private static final int ANCHO_MAXIMO = 210;
+    private static final int SEPARACION = 26;
+    private static final int ANCHO_MAXIMO = 230;
 
     private final CoordinadorAplicacion coordinador;
     private final Consumer<PeliculaDTO> alSeleccionar;
-    private final JButton btnAnterior = flecha("‹", "Anterior");
-    private final JButton btnSiguiente = flecha("›", "Siguiente");
     private final Pista pista = new Pista();
 
     /** Tarjetas ya creadas, para no volver a cargar el poster en cada movimiento. */
@@ -47,15 +41,11 @@ public final class CarruselPeliculas extends JPanel {
     private int posicion;
 
     public CarruselPeliculas(CoordinadorAplicacion coordinador, Consumer<PeliculaDTO> alSeleccionar) {
-        super(new BorderLayout(10, 0));
+        super(new BorderLayout());
         this.coordinador = coordinador;
         this.alSeleccionar = alSeleccionar;
         setOpaque(false);
-        btnAnterior.addActionListener(e -> anterior());
-        btnSiguiente.addActionListener(e -> siguiente());
-        add(centrada(btnAnterior), BorderLayout.WEST);
         add(pista, BorderLayout.CENTER);
-        add(centrada(btnSiguiente), BorderLayout.EAST);
         addMouseWheelListener(e -> {
             if (e.getWheelRotation() > 0) {
                 siguiente();
@@ -98,10 +88,6 @@ public final class CarruselPeliculas extends JPanel {
         pista.centro.clear();
 
         int total = peliculas.size();
-        boolean desplazable = total > VISIBLES;
-        btnAnterior.setVisible(desplazable);
-        btnSiguiente.setVisible(desplazable);
-
         for (int i = 0; i < Math.min(VISIBLES, total); i++) {
             int indice = (posicion + i) % total;
             TarjetaPelicula tarjeta = completas.computeIfAbsent(indice,
@@ -109,7 +95,7 @@ public final class CarruselPeliculas extends JPanel {
             pista.centro.add(tarjeta);
             pista.add(tarjeta);
         }
-        // Con 5 peliculas solo cabe la parcial izquierda; con 6 o mas, las dos
+        // Con 5 peliculas solo cabe la parcial izquierda; con 6 o mas, las dos parciales
         if (total > VISIBLES) {
             pista.izquierda = parcial((posicion - 1 + total) % total, p -> anterior());
             pista.add(pista.izquierda);
@@ -123,34 +109,11 @@ public final class CarruselPeliculas extends JPanel {
     }
 
     private Atenuada parcial(int indice, Consumer<PeliculaDTO> alClic) {
-        Atenuada parcial = parciales.computeIfAbsent(indice,
+        return parciales.computeIfAbsent(indice,
                 k -> new Atenuada(new TarjetaPelicula(peliculas.get(k), coordinador, alClic)));
-        return parcial;
     }
 
-    /** Pone la flecha a media altura sin estirarla. */
-    private static JPanel centrada(JButton flecha) {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setOpaque(false);
-        panel.add(flecha);
-        return panel;
-    }
-
-    private static JButton flecha(String texto, String ayuda) {
-        JButton boton = new JButton(texto);
-        boton.setToolTipText(ayuda);
-        boton.getAccessibleContext().setAccessibleName(ayuda);
-        boton.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        boton.setMargin(new Insets(0, 0, 0, 0));
-        boton.setFocusable(false);
-        boton.setPreferredSize(new Dimension(44, 64));
-        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        boton.putClientProperty("JButton.buttonType", "roundRect");
-        Tema.botonSecundario(boton);
-        return boton;
-    }
-
-    /** Area central: acomoda las tarjetas a mano para que las de los bordes queden cortadas. */
+    /** Area central: acomoda las 4 tarjetas completas al centro y corta las de los bordes. */
     private static final class Pista extends JPanel {
 
         private final List<Component> centro = new ArrayList<>();
@@ -166,42 +129,59 @@ public final class CarruselPeliculas extends JPanel {
         public void doLayout() {
             int ancho = getWidth();
             int alto = getHeight();
-            int lugares = centro.size() + (izquierda != null || derecha != null ? 1 : 0);
             if (centro.isEmpty() || ancho <= 0) {
                 return;
             }
-            int columnas = Math.max(VISIBLES, lugares);
-            int tarjeta = Math.min(ANCHO_MAXIMO, (ancho - SEPARACION * columnas) / columnas);
+            // Reserva ~0.55 de tarjeta a cada lado para que las parciales asomen cortadas como en Figma
+            double columnas = Math.max(VISIBLES, centro.size())
+                    + (izquierda != null || derecha != null ? 1.05 : 0);
+            int tarjeta = Math.min(
+                    ANCHO_MAXIMO,
+                    (int) Math.round((ancho - SEPARACION * (VISIBLES + 1)) / columnas));
             int usado = centro.size() * tarjeta + (centro.size() - 1) * SEPARACION;
-            int x = (ancho - usado) / 2;
+            int inicio = (ancho - usado) / 2;
+            int x = inicio;
             for (Component c : centro) {
                 c.setBounds(x, 0, tarjeta, alto);
                 x += tarjeta + SEPARACION;
             }
-            int inicio = (ancho - usado) / 2;
+            int desfaseLateral = 14;
+            int altoLateral = Math.max(0, alto - desfaseLateral);
             if (izquierda != null) {
-                izquierda.setBounds(inicio - SEPARACION - tarjeta, 0, tarjeta, alto);
+                izquierda.setBounds(inicio - SEPARACION - tarjeta, desfaseLateral, tarjeta, altoLateral);
             }
             if (derecha != null) {
-                derecha.setBounds(inicio + usado + SEPARACION, 0, tarjeta, alto);
+                derecha.setBounds(inicio + usado + SEPARACION, desfaseLateral, tarjeta, altoLateral);
+            }
+        }
+
+        @Override
+        protected void paintChildren(Graphics g) {
+            Graphics g2 = g.create();
+            try {
+                g2.clipRect(0, 0, getWidth(), getHeight());
+                super.paintChildren(g2);
+            } finally {
+                g2.dispose();
             }
         }
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(900, 320);
+            return new Dimension(1020, 390);
         }
     }
 
-    /** Tarjeta de borde: se pinta normal y encima un velo del color de fondo. */
+    /** Tarjeta de borde: se pinta normal y encima un velo oscuro para atenuarla como en el Figma. */
     private static final class Atenuada extends JPanel {
 
         private static final Color VELO = new Color(
-                Tema.FONDO.getRed(), Tema.FONDO.getGreen(), Tema.FONDO.getBlue(), 160);
+                Tema.FONDO.getRed(), Tema.FONDO.getGreen(), Tema.FONDO.getBlue(), 165);
 
         private Atenuada(TarjetaPelicula tarjeta) {
             super(new BorderLayout());
             setOpaque(false);
+            setToolTipText("Desplazar carrusel");
             add(tarjeta, BorderLayout.CENTER);
         }
 
