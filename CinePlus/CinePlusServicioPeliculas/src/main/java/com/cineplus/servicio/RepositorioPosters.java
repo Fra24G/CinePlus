@@ -22,22 +22,42 @@ public class RepositorioPosters {
 
     private static final long MAXIMO_BYTES = 5_000_000;
     private static final String URL_IMAGENES = "https://image.tmdb.org/t/p/w342";
+    private static final String PREFIJO_ARCHIVO = "archivo:";
 
     private final HttpClient clienteHttp =
             HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(4)).build();
 
     public byte[] obtener(PeliculaDTO pelicula) {
-        String imagen = pelicula.imagen();
-        if (imagen == null || imagen.isBlank()) {
-            return new byte[0];
-        }
-        if (imagen.startsWith(ServicioPeliculasTmdb.PREFIJO_RECURSO)) {
-            return leerRecurso(imagen.substring(ServicioPeliculasTmdb.PREFIJO_RECURSO.length()));
-        }
-        return descargar(imagen);
+
+    if (pelicula == null) {
+        return new byte[0];
     }
 
-    /** Lee un poster incluido dentro del programa (carpeta resources). */
+    String imagen = pelicula.imagen();
+
+    if (imagen == null || imagen.isBlank()) {
+        return new byte[0];
+    }
+
+    // Poster incluido dentro del programa.
+    if (imagen.startsWith(ServicioPeliculasTmdb.PREFIJO_RECURSO)) {
+        return leerRecurso(
+                imagen.substring(ServicioPeliculasTmdb.PREFIJO_RECURSO.length())
+        );
+    }
+
+    // Poster guardado por el administrador.
+    if (imagen.startsWith(PREFIJO_ARCHIVO)) {
+        return leerArchivoLocal(
+                imagen.substring(PREFIJO_ARCHIVO.length())
+        );
+    }
+
+    // Poster descargado desde TMDB.
+    return descargar(imagen);
+}
+
+    /** Lee un poster incluido dentro del programa (carpeta resources) */
     private byte[] leerRecurso(String nombre) {
         // Solo nombres simples como "coco.jpg": evita rutas raras
         if (!nombre.matches("[a-z0-9-]+\\.jpg")) {
@@ -50,6 +70,41 @@ public class RepositorioPosters {
             return new byte[0];
         }
     }
+    /** Lee un poster guardado por el administrador*/
+private byte[] leerArchivoLocal(String nombre) {
+
+    if (nombre == null || !nombre.matches(
+            "[a-zA-Z0-9_-]{1,35}-[0-9a-fA-F-]{36}\\.(jpg|png|gif|bmp|wbmp)")) {
+        return new byte[0];
+    }
+
+    try {
+        Path carpeta = Path.of(
+                System.getProperty("user.home"),
+                ".cineplus",
+                "posters"
+        ).toAbsolutePath().normalize();
+
+        Path archivo = carpeta.resolve(nombre).normalize();
+
+        // Comprueba que el archivo este dentro de la carpeta permitida
+        if (!archivo.startsWith(carpeta)
+                || !Files.isRegularFile(archivo)) {
+            return new byte[0];
+        }
+
+        long tamanio = Files.size(archivo);
+
+        if (tamanio <= 0 || tamanio >= MAXIMO_BYTES) {
+            return new byte[0];
+        }
+
+        return Files.readAllBytes(archivo);
+
+    } catch (IOException | RuntimeException e) {
+        return new byte[0];
+    }
+}
 
     /** Busca el poster en la cache y, si no esta, lo descarga de TMDB. */
     private byte[] descargar(String ruta) {

@@ -1,3 +1,4 @@
+
 package com.cineplus.negocio.bo;
 
 import com.cineplus.dto.CarteleraDTO;
@@ -6,10 +7,7 @@ import com.cineplus.servicio.IServicioPeliculas;
 import java.util.List;
 
 /**
- * Objeto de negocio de las peliculas generales (TMDB). Solo conoce la interfaz del
- * servicio de peliculas, no sabe si los datos vienen de TMDB o de otro proveedor.
- *
- * @author luisf
+ * Objeto de negocio para consultar y buscar peliculas
  */
 public class CarteleraBO {
 
@@ -19,17 +17,23 @@ public class CarteleraBO {
         this.servicio = servicio;
     }
 
+    /** Consulta las peliculas disponibles en cartelera */
     public CarteleraDTO consultar() {
         return servicio.consultarCartelera();
     }
 
+    /** Obtiene el poster de una pelicula. */
     public byte[] obtenerPoster(PeliculaDTO pelicula) {
         return servicio.obtenerPoster(pelicula);
     }
 
-    /** Busca peliculas en TMDB por titulo (para "Anadir a cartelera"). */
+    /** Busca peliculas por titulo para agregarlas al catalogo*/
     public List<PeliculaDTO> buscar(String texto) throws Exception {
-        // Lo implementa el Desarrollador 2
-        throw new Exception("Pendiente: CarteleraBO.buscar");
+
+        if (texto == null || texto.trim().isEmpty()) {
+            return List.of();
+        }
+
+        return servicio.buscar(texto.trim());
     }
 }
