@@ -12,17 +12,14 @@ import com.cineplus.persistencia.uow.UnitOfWork;
 import java.util.Optional;
 
 /**
- * Objeto de negocio de usuarios: valida los datos, protege la contrasena
- * y usa el DAO a traves de un UnitOfWork. Los errores se lanzan como
- * Exception con un mensaje claro para el usuario.
+ * Reglas de negocio del usuario: registro, inicio de sesion, consulta y perfil.
  *
- * @author luisf
+ * @author Luis Guillermo Franco Murrieta
  */
 public class UsuarioBO {
 
     private final HashContrasena hash = new HashContrasena();
 
-    /** Crea una cuenta nueva de cliente. */
     public UsuarioDTO registrar(RegistroUsuarioDTO datos) throws Exception {
         Validaciones.registro(datos);
 
@@ -37,7 +34,6 @@ public class UsuarioBO {
 
         try (UnitOfWork uow = new UnitOfWork()) {
             uow.iniciar();
-            // El correo es unico: se revisa antes de guardar
             if (uow.usuarioDAO().buscarPorCorreo(usuario.getCorreo()).isPresent()) {
                 throw new Exception("Ese correo ya tiene una cuenta. Inicia sesión para continuar.");
             }
@@ -47,7 +43,6 @@ public class UsuarioBO {
         }
     }
 
-    /** Comprueba correo y contrasena. Si son correctos devuelve el usuario. */
     public UsuarioDTO autenticar(CredencialesDTO datos) throws Exception {
         if (datos == null) {
             throw new Exception("Captura tu correo y contraseña.");
@@ -61,26 +56,53 @@ public class UsuarioBO {
             Optional<Usuario> encontrado = uow.usuarioDAO().buscarPorCorreo(correo);
             if (encontrado.isEmpty()
                     || !hash.coincide(datos.contrasena(), encontrado.get().getContrasena())) {
-                // Mismo mensaje para correo o contrasena incorrectos: no revela cual fallo
                 throw new Exception("Correo o contraseña incorrectos.");
             }
             return aDTO(encontrado.get());
         }
     }
 
-    /** Busca un usuario por id con sus puntos al dia. */
+    /**
+     * Lee el usuario de la BD (puntos al dia) y lo devuelve como DTO, sin contrasena.
+     */
     public UsuarioDTO obtener(Integer idUsuario) throws Exception {
-        // Lo implementa el Desarrollador 1
-        throw new Exception("Pendiente: UsuarioBO.obtener");
+        if (idUsuario == null) {
+            throw new Exception("No se encontró el usuario.");
+        }
+        try (UnitOfWork uow = new UnitOfWork()) {
+            Usuario usuario = uow.usuarioDAO().buscarPorId(idUsuario)
+                    .orElseThrow(() -> new Exception("No se encontró el usuario."));
+            return aDTO(usuario);
+        }
     }
 
-    /** Actualiza nombre, nombre de usuario, telefono y, si viene, la contrasena. */
+    /**
+     * Actualiza nombre, nombre de usuario y telefono. Si viene una contrasena
+     * nueva, la guarda con BCrypt. Correo, rol y puntos no se modifican aqui.
+     */
     public UsuarioDTO actualizarPerfil(Integer idUsuario, ActualizarPerfilDTO datos) throws Exception {
-        // Lo implementa el Desarrollador 1
-        throw new Exception("Pendiente: UsuarioBO.actualizarPerfil");
+        ValidacionesCuenta.perfil(datos);
+        if (idUsuario == null) {
+            throw new Exception("No se encontró el usuario.");
+        }
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.iniciar();
+            Usuario usuario = uow.usuarioDAO().buscarPorId(idUsuario)
+                    .orElseThrow(() -> new Exception("No se encontró el usuario."));
+
+            usuario.setNombre(datos.nombre().strip());
+            usuario.setNombreUsuario(Validaciones.textoOpcional(datos.nombreUsuario()));
+            usuario.setTelefono(Validaciones.textoOpcional(datos.telefono()));
+            if (ValidacionesCuenta.cambiaContrasena(datos)) {
+                usuario.setContrasena(hash.crear(datos.nuevaContrasena().toCharArray()));
+            }
+
+            Usuario actualizado = uow.usuarioDAO().actualizar(usuario);
+            uow.commit();
+            return aDTO(actualizado);
+        }
     }
 
-    /** Convierte la entidad en DTO. El DTO nunca lleva la contrasena. Lo reutilizan otros BO. */
     static UsuarioDTO aDTO(Usuario usuario) {
         return new UsuarioDTO(
                 usuario.getIdUsuario(),
