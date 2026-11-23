@@ -3,16 +3,17 @@ package com.cineplus.negocio.control;
 import com.cineplus.dto.CompraDTO;
 import com.cineplus.dto.CotizacionDTO;
 import com.cineplus.dto.SolicitudCompraDTO;
+import com.cineplus.dto.UsuarioDTO;
 import com.cineplus.negocio.bo.CompraBO;
 import com.cineplus.negocio.bo.MembresiaBO;
 import com.cineplus.negocio.bo.UsuarioBO;
 
 /**
- * Control del caso de uso "Comprar boletos".
- *
- * @author luisf
+ * 
+ * @author yakor
  */
 public class ControlCompra {
+
     private final CompraBO compraBO;
     private final MembresiaBO membresiaBO;
     private final UsuarioBO usuarioBO;
@@ -26,15 +27,23 @@ public class ControlCompra {
         this.usuario = usuario;
     }
 
-    /** Cotiza la compra del usuario de la sesion. */
+    /** 
+     * Cotiza una compra del usuario 
+     */
     public CotizacionDTO cotizar(SolicitudCompraDTO solicitud) throws Exception {
-        // Lo implementa el Desarrollador 3
-        throw new Exception("Pendiente: ControlCompra.cotizar");
+        UsuarioDTO actual = usuario.exigirSesion();
+        boolean pro = membresiaBO.esPro(actual.idUsuario());
+        return compraBO.cotizar(actual.idUsuario(), solicitud, pro);
     }
 
-    /** Compra y refresca los puntos de la sesion. */
+    /** 
+     * compra y refresca los puntos 
+     */
     public CompraDTO confirmar(SolicitudCompraDTO solicitud) throws Exception {
-        // Lo implementa el Desarrollador 3
-        throw new Exception("Pendiente: ControlCompra.confirmar");
+        UsuarioDTO actual = usuario.exigirSesion();
+        boolean pro = membresiaBO.esPro(actual.idUsuario());
+        CompraDTO compra = compraBO.comprar(actual.idUsuario(), solicitud, pro);
+        usuario.refrescar(usuarioBO.obtener(actual.idUsuario()));
+        return compra;
     }
 }
