@@ -5,6 +5,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -25,6 +28,9 @@ public class TarjetaBoleto extends JPanel {
 
     /** Tamano del QR (igual al PNG que genera BoletoBO). */
     private static final int TAMANO_QR = 220;
+    private static final DateTimeFormatter FECHA_LARGA =
+            DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.forLanguageTag("es-MX"));
+    private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm");
 
     private final BoletoDTO boleto;
     private final CoordinadorAplicacion coordinador;
@@ -59,8 +65,8 @@ public class TarjetaBoleto extends JPanel {
         datos.setLayout(new BoxLayout(datos, BoxLayout.Y_AXIS));
 
         JLabel lblPelicula = etiqueta(boleto.tituloPelicula(), Font.BOLD, 22, Tema.TEXTO);
-        JLabel lblFecha = etiqueta(FormatoCompra.fechaLarga(boleto.fechaHoraFuncion()), Font.BOLD, 16, Tema.TEXTO_SUAVE);
-        JLabel lblTipo = etiqueta(FormatoCompra.hora(boleto.fechaHoraFuncion()) + " · " + boleto.tipoFuncion(),
+        JLabel lblFecha = etiqueta(fechaLarga(boleto.fechaHoraFuncion()), Font.BOLD, 16, Tema.TEXTO_SUAVE);
+        JLabel lblTipo = etiqueta(hora(boleto.fechaHoraFuncion()) + " · " + boleto.tipoFuncion(),
                 Font.PLAIN, 15, Tema.MUTED);
         JLabel lblAsiento = etiqueta("Asiento " + boleto.asiento(), Font.BOLD, 18, Tema.TEXTO);
         JLabel lblSala = etiqueta(boleto.cine() + " SALA " + boleto.numeroSala(), Font.PLAIN, 15, Tema.MUTED);
@@ -83,6 +89,20 @@ public class TarjetaBoleto extends JPanel {
         datos.add(lblCodigo);
         datos.add(btnDetalles);
         return datos;
+    }
+
+    /** "Jueves 5 de noviembre". */
+    private static String fechaLarga(LocalDateTime fecha) {
+        if (fecha == null) {
+            return "";
+        }
+        String texto = FECHA_LARGA.format(fecha);
+        return Character.toUpperCase(texto.charAt(0)) + texto.substring(1);
+    }
+
+    /** "18:30". */
+    private static String hora(LocalDateTime fecha) {
+        return fecha == null ? "" : HORA.format(fecha);
     }
 
     private static JLabel etiqueta(String texto, int estilo, int tamano, java.awt.Color color) {

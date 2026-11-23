@@ -4,22 +4,23 @@ import com.cineplus.dto.CompraDTO;
 import com.cineplus.dto.FiltroComprasDTO;
 import com.cineplus.dto.PaginaDTO;
 import com.cineplus.presentacion.CoordinadorAplicacion;
-import com.cineplus.presentacion.CoordinadorBoletos;
-import com.cineplus.presentacion.FormatoCompra;
 import com.cineplus.presentacion.ModeloTablaCompras;
-import com.cineplus.presentacion.Paginador;
 import com.cineplus.presentacion.PanelEncabezado;
 import com.cineplus.presentacion.PanelNavegacion;
 import com.cineplus.presentacion.Seccion;
 import com.cineplus.presentacion.Tema;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -30,6 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * Pantalla "Historial de compras" (F10) en formato tabla: filtros (desde, hasta,
@@ -42,6 +45,17 @@ public class FrmHistorial extends JFrame {
 
     /** Opciones del filtro de estado; "Todos" no filtra. */
     private static final String[] ESTADOS = {"Todos", "Aprobado", "Cancelado", "Denegado"};
+    /** Filas por pagina de la tabla. */
+    private static final int FILAS_POR_PAGINA = 10;
+    /** Cuantos numeros de pagina se muestran como maximo en el paginador. */
+    private static final int PAGINAS_VISIBLES = 7;
+    /** Columna "Estado" de ModeloTablaCompras. */
+    private static final int COLUMNA_ESTADO = 6;
+    /** Verde de "Aprobado". TODO: pedir a Desarrollador 1 que lo agregue a Tema. */
+    private static final Color VERDE = new Color(0x4cc38a);
+    /** Formato de captura de las fechas del filtro. */
+    private static final DateTimeFormatter FECHA_CAPTURA =
+            DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
 
     private CoordinadorAplicacion coordinador;
     private final ModeloTablaCompras modelo = new ModeloTablaCompras();
@@ -52,7 +66,9 @@ public class FrmHistorial extends JFrame {
     private final JButton btnFiltrar = new JButton("Filtrar");
     private final JButton btnLimpiar = new JButton("Limpiar");
     private final JLabel lblTotal = new JLabel(" ");
-    private Paginador paginador;
+    private int paginaActual;
+    private int totalPaginas;
+    private boolean paginadorActivo = true;
 
     /** Constructor para el editor visual de NetBeans. */
     public FrmHistorial() {
@@ -65,8 +81,6 @@ public class FrmHistorial extends JFrame {
         this();
         this.coordinador = coordinador;
         pnlNavegacion.add(new PanelNavegacion(coordinador, Seccion.HISTORIAL), BorderLayout.CENTER);
-        paginador = new Paginador(pagina -> buscar());
-        pnlPaginador.add(paginador, BorderLayout.CENTER);
         conectarEventos();
         buscar();
     }
@@ -95,7 +109,7 @@ public class FrmHistorial extends JFrame {
         pnlFiltros.add(btnFiltrar);
         pnlFiltros.add(btnLimpiar);
 
-        ModeloTablaCompras.configurarTabla(tblCompras, ModeloTablaCompras.COLUMNA_ESTADO);
+        configurarTabla();
         tblCompras.setToolTipText("Doble clic para ver el detalle de la compra");
         JScrollPane scroll = new JScrollPane(tblCompras);
         scroll.setBorder(BorderFactory.createLineBorder(Tema.BORDE_TARJETA));
@@ -114,6 +128,47 @@ public class FrmHistorial extends JFrame {
 
         lblError.setForeground(Tema.ERROR);
         lblEstado.setForeground(Tema.MUTED);
+    }
+
+    /**
+     * Estilo de la tabla: filas altas, sin reordenar columnas, una sola seleccion y
+     * el estado con color (Aprobado verde, Denegado rojo, Cancelado gris).
+     */
+    private void configurarTabla() {
+        tblCompras.setRowHeight(36);
+        tblCompras.setFont(Tema.fuente(Font.PLAIN, 14));
+        tblCompras.getTableHeader().setFont(Tema.fuente(Font.BOLD, 14));
+        tblCompras.getTableHeader().setReorderingAllowed(false);
+        tblCompras.getTableHeader().setBackground(Tema.NAV_FONDO);
+        tblCompras.getTableHeader().setForeground(Tema.TEXTO);
+        tblCompras.getTableHeader().putClientProperty("FlatLaf.style",
+                "background: " + Tema.hex(Tema.NAV_FONDO) + "; separatorColor: " + Tema.hex(Tema.NAV_BORDE)
+                + "; bottomSeparatorColor: " + Tema.hex(Tema.NAV_BORDE) + "; height: 38");
+        tblCompras.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblCompras.setShowVerticalLines(false);
+        tblCompras.setFillsViewportHeight(true);
+        tblCompras.setBackground(Tema.TARJETA_MORADA);
+        tblCompras.setForeground(Tema.TEXTO);
+        tblCompras.setGridColor(Tema.BORDE_TARJETA);
+        tblCompras.setSelectionBackground(Tema.NAV_ACTIVO);
+        tblCompras.setSelectionForeground(Tema.TEXTO);
+        tblCompras.getColumnModel().getColumn(COLUMNA_ESTADO).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean seleccionada,
+                    boolean foco, int fila, int columna) {
+                JLabel celda = (JLabel) super.getTableCellRendererComponent(tabla, valor, seleccionada, foco, fila, columna);
+                String estado = valor == null ? "" : valor.toString();
+                celda.setFont(celda.getFont().deriveFont(Font.BOLD));
+                if (!seleccionada) {
+                    celda.setForeground(switch (estado) {
+                        case "Aprobado" -> VERDE;
+                        case "Denegado" -> Tema.ERROR;
+                        default -> Tema.MUTED;
+                    });
+                }
+                return celda;
+            }
+        });
     }
 
     private static JLabel filtro(String texto) {
@@ -148,7 +203,7 @@ public class FrmHistorial extends JFrame {
 
     /** Al cambiar los filtros se regresa a la pagina 1. */
     private void filtrar() {
-        paginador.reiniciar();
+        paginaActual = 0;
         buscar();
     }
 
@@ -162,10 +217,63 @@ public class FrmHistorial extends JFrame {
     /** Llena la tabla y actualiza el paginador. */
     public void mostrarCompras(PaginaDTO<CompraDTO> pagina) {
         modelo.mostrar(pagina.elementos());
-        paginador.mostrar(pagina);
+        paginaActual = pagina.pagina();
+        totalPaginas = pagina.totalPaginas();
+        dibujarPaginador();
         lblTotal.setText(pagina.total() == 0
                 ? "No hay compras con estos filtros."
                 : pagina.total() + (pagina.total() == 1 ? " compra" : " compras"));
+    }
+
+    /** Paginador del Figma "&lt; 1 - 2 - 3 &gt;" dentro de pnlPaginador. */
+    private void dibujarPaginador() {
+        pnlPaginador.removeAll();
+        JPanel botones = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));
+        botones.setOpaque(false);
+        if (totalPaginas > 1) {
+            botones.add(botonPagina("<", paginaActual - 1, paginaActual > 0, false));
+            int inicio = Math.max(0, Math.min(paginaActual - PAGINAS_VISIBLES / 2, totalPaginas - PAGINAS_VISIBLES));
+            int fin = Math.min(totalPaginas, inicio + PAGINAS_VISIBLES);
+            for (int i = inicio; i < fin; i++) {
+                if (i > inicio) {
+                    JLabel guion = new JLabel("-");
+                    guion.setForeground(Tema.MUTED);
+                    botones.add(guion);
+                }
+                botones.add(botonPagina(String.valueOf(i + 1), i, true, i == paginaActual));
+            }
+            botones.add(botonPagina(">", paginaActual + 1, paginaActual < totalPaginas - 1, false));
+        }
+        pnlPaginador.add(botones, BorderLayout.CENTER);
+        pnlPaginador.revalidate();
+        pnlPaginador.repaint();
+    }
+
+    /** Boton de una pagina; al pulsarlo busca esa pagina con los filtros actuales. */
+    private JButton botonPagina(String texto, int destino, boolean activo, boolean actual) {
+        JButton boton = new JButton(texto);
+        Tema.enlace(boton, actual ? Tema.TEXTO : Tema.MUTED, actual);
+        boton.setFont(Tema.fuente(actual ? Font.BOLD : Font.PLAIN, 16));
+        boton.setEnabled(activo && paginadorActivo);
+        boton.addActionListener(e -> {
+            if (!actual) {
+                paginaActual = destino;
+                buscar();
+            }
+        });
+        return boton;
+    }
+
+    /** Lee una fecha "dd/mm/aaaa". Vacio = null. Si no es valida lanza Exception con el mensaje. */
+    private static LocalDate leerFecha(String texto, String campo) throws Exception {
+        if (texto == null || texto.isBlank()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(texto.strip(), FECHA_CAPTURA);
+        } catch (DateTimeParseException e) {
+            throw new Exception("La fecha \"" + campo + "\" debe tener el formato dd/mm/aaaa.");
+        }
     }
 
     /**
@@ -178,31 +286,29 @@ public class FrmHistorial extends JFrame {
         LocalDate desde;
         LocalDate hasta;
         try {
-            desde = FormatoCompra.leerFecha(txtDesde.getText(), "Desde");
+            desde = leerFecha(txtDesde.getText(), "Desde");
         } catch (Exception e) {
             Tema.marcarError(txtDesde, true);
             mostrarError(e.getMessage());
             return null;
         }
         try {
-            hasta = FormatoCompra.leerFecha(txtHasta.getText(), "Hasta");
+            hasta = leerFecha(txtHasta.getText(), "Hasta");
         } catch (Exception e) {
             Tema.marcarError(txtHasta, true);
             mostrarError(e.getMessage());
             return null;
         }
         String estado = cboEstado.getSelectedIndex() <= 0 ? null : (String) cboEstado.getSelectedItem();
-        int pagina = paginador == null ? 0 : paginador.pagina();
-        return new FiltroComprasDTO(null, desde, hasta, estado, pagina, CoordinadorBoletos.FILAS_POR_PAGINA);
+        return new FiltroComprasDTO(null, desde, hasta, estado, paginaActual, FILAS_POR_PAGINA);
     }
 
     /** Deshabilita botones y muestra "Cargando…" mientras corre la tarea. */
     public void ocupado(boolean ocupado) {
         btnFiltrar.setEnabled(!ocupado);
         btnLimpiar.setEnabled(!ocupado);
-        if (paginador != null) {
-            paginador.setEnabled(!ocupado);
-        }
+        paginadorActivo = !ocupado;
+        dibujarPaginador();
         lblEstado.setText(ocupado ? "Cargando…" : "");
         if (ocupado) {
             mostrarError(null);

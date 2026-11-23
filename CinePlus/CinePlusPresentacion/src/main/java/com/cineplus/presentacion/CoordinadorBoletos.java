@@ -9,7 +9,6 @@ import com.cineplus.presentacion.formularios.FrmBoletos;
 import com.cineplus.presentacion.formularios.FrmDetalleCompra;
 import com.cineplus.presentacion.formularios.FrmHistorial;
 import com.cineplus.presentacion.formularios.admin.FrmTransacciones;
-import java.util.Optional;
 
 /**
  * Coordinador del modulo. Boletos con QR, historial de compras, detalle, cancelacion y transacciones.
@@ -21,10 +20,7 @@ import java.util.Optional;
 public final class CoordinadorBoletos {
 
     /** Boletos por pagina en "Mis boletos". */
-    public static final int BOLETOS_POR_PAGINA = 4;
-    /** Filas por pagina en el historial y en transacciones. */
-    public static final int FILAS_POR_PAGINA = 10;
-
+    private static final int BOLETOS_POR_PAGINA = 4;
     private static final String MENSAJE_EXITO = "¡Se realizó la operación con éxito!";
 
     private final CoordinadorAplicacion app;
@@ -117,13 +113,21 @@ public final class CoordinadorBoletos {
                 });
     }
 
-    /** Abre DlgCancelacion; si el usuario confirma con motivo, llama a cancelarCompra. */
+    /**
+     * Abre DlgCancelacion; si el usuario escribe el motivo y confirma, pide la
+     * cancelacion con cancelarCompra.
+     */
     public void pedirCancelacion(FrmDetalleCompra vista, CompraDTO compra) {
-        Optional<String> motivo = new DlgCancelacion(vista, compra).mostrarYLeerMotivo();
-        motivo.ifPresent(texto -> cancelarCompra(vista, new CancelacionDTO(compra.idCompra(), texto)));
+        if (compra == null) {
+            return;
+        }
+        new DlgCancelacion(vista, compra).mostrarYLeerMotivo().ifPresent(motivo ->
+                cancelarCompra(vista, new CancelacionDTO(compra.idCompra(), motivo)));
     }
 
-    /** fachada.cancelarCompra -> pantalla de exito y despues el historial. */
+    /**
+     * fachada.cancelarCompra -> pantalla de exito y despues el historial.
+     */
     public void cancelarCompra(FrmDetalleCompra vista, CancelacionDTO datos) {
         vista.ocupado(true);
         app.ejecutar(

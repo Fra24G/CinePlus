@@ -4,13 +4,12 @@ import com.cineplus.dto.FiltroComprasDTO;
 import com.cineplus.dto.PaginaDTO;
 import com.cineplus.dto.TransaccionDTO;
 import com.cineplus.presentacion.CoordinadorAplicacion;
-import com.cineplus.presentacion.CoordinadorBoletos;
-import com.cineplus.presentacion.ModeloTablaCompras;
 import com.cineplus.presentacion.ModeloTablaTransacciones;
-import com.cineplus.presentacion.Paginador;
 import com.cineplus.presentacion.Tema;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
@@ -22,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * Pantalla "Historial de Transacciones" del admin (F21): barra admin (Panel /
@@ -32,6 +33,15 @@ import javax.swing.JTextField;
  */
 public class FrmTransacciones extends JFrame {
 
+    /** Filas por pagina de la tabla. */
+    private static final int FILAS_POR_PAGINA = 10;
+    /** Cuantos numeros de pagina se muestran como maximo en el paginador. */
+    private static final int PAGINAS_VISIBLES = 7;
+    /** Columna "Estado" de ModeloTablaTransacciones. */
+    private static final int COLUMNA_ESTADO = 6;
+    /** Verde de "Aprobado". TODO: pedir a Desarrollador 1 que lo agregue a Tema. */
+    private static final Color VERDE = new Color(0x4cc38a);
+
     private CoordinadorAplicacion coordinador;
     private final ModeloTablaTransacciones modelo = new ModeloTablaTransacciones();
     private final JTable tblTransacciones = new JTable(modelo);
@@ -41,7 +51,9 @@ public class FrmTransacciones extends JFrame {
     private final JButton btnTransacciones = new JButton("Transacciones");
     private final JButton btnCerrarSesion = new JButton("Cerrar sesión");
     private final JLabel lblTotal = new JLabel(" ");
-    private Paginador paginador;
+    private int paginaActual;
+    private int totalPaginas;
+    private boolean paginadorActivo = true;
 
     /** Constructor para el editor visual de NetBeans. */
     public FrmTransacciones() {
@@ -53,8 +65,6 @@ public class FrmTransacciones extends JFrame {
     public FrmTransacciones(CoordinadorAplicacion coordinador) {
         this();
         this.coordinador = coordinador;
-        paginador = new Paginador(pagina -> buscar());
-        pnlPaginador.add(paginador, BorderLayout.CENTER);
         conectarEventos();
         buscar();
     }
@@ -93,7 +103,7 @@ public class FrmTransacciones extends JFrame {
         pnlBuscador.add(txtBuscar);
         pnlBuscador.add(btnBuscar);
 
-        ModeloTablaCompras.configurarTabla(tblTransacciones, ModeloTablaTransacciones.COLUMNA_ESTADO);
+        configurarTabla();
         JScrollPane scroll = new JScrollPane(tblTransacciones);
         scroll.setBorder(BorderFactory.createLineBorder(Tema.BORDE_TARJETA));
 
@@ -113,6 +123,47 @@ public class FrmTransacciones extends JFrame {
         lblEstado.setForeground(Tema.MUTED);
     }
 
+    /**
+     * Estilo de la tabla (el mismo que el historial): filas altas, sin reordenar
+     * columnas, una sola seleccion y el estado con color.
+     */
+    private void configurarTabla() {
+        tblTransacciones.setRowHeight(36);
+        tblTransacciones.setFont(Tema.fuente(Font.PLAIN, 14));
+        tblTransacciones.getTableHeader().setFont(Tema.fuente(Font.BOLD, 14));
+        tblTransacciones.getTableHeader().setReorderingAllowed(false);
+        tblTransacciones.getTableHeader().setBackground(Tema.NAV_FONDO);
+        tblTransacciones.getTableHeader().setForeground(Tema.TEXTO);
+        tblTransacciones.getTableHeader().putClientProperty("FlatLaf.style",
+                "background: " + Tema.hex(Tema.NAV_FONDO) + "; separatorColor: " + Tema.hex(Tema.NAV_BORDE)
+                + "; bottomSeparatorColor: " + Tema.hex(Tema.NAV_BORDE) + "; height: 38");
+        tblTransacciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblTransacciones.setShowVerticalLines(false);
+        tblTransacciones.setFillsViewportHeight(true);
+        tblTransacciones.setBackground(Tema.TARJETA_MORADA);
+        tblTransacciones.setForeground(Tema.TEXTO);
+        tblTransacciones.setGridColor(Tema.BORDE_TARJETA);
+        tblTransacciones.setSelectionBackground(Tema.NAV_ACTIVO);
+        tblTransacciones.setSelectionForeground(Tema.TEXTO);
+        tblTransacciones.getColumnModel().getColumn(COLUMNA_ESTADO).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean seleccionada,
+                    boolean foco, int fila, int columna) {
+                JLabel celda = (JLabel) super.getTableCellRendererComponent(tabla, valor, seleccionada, foco, fila, columna);
+                String estado = valor == null ? "" : valor.toString();
+                celda.setFont(celda.getFont().deriveFont(Font.BOLD));
+                if (!seleccionada) {
+                    celda.setForeground(switch (estado) {
+                        case "Aprobado" -> VERDE;
+                        case "Denegado" -> Tema.ERROR;
+                        default -> Tema.MUTED;
+                    });
+                }
+                return celda;
+            }
+        });
+    }
+
     private void conectarEventos() {
         btnPanel.addActionListener(e -> coordinador.admin().abrirPanel());
         btnCerrarSesion.addActionListener(e -> coordinador.cerrarSesion());
@@ -122,7 +173,7 @@ public class FrmTransacciones extends JFrame {
 
     /** Al cambiar la busqueda se regresa a la pagina 1. */
     private void filtrar() {
-        paginador.reiniciar();
+        paginaActual = 0;
         buscar();
     }
 
@@ -133,26 +184,65 @@ public class FrmTransacciones extends JFrame {
     /** Llena la tabla y el paginador. */
     public void mostrarTransacciones(PaginaDTO<TransaccionDTO> pagina) {
         modelo.mostrar(pagina.elementos());
-        paginador.mostrar(pagina);
+        paginaActual = pagina.pagina();
+        totalPaginas = pagina.totalPaginas();
+        dibujarPaginador();
         lblTotal.setText(pagina.total() == 0
                 ? "No hay transacciones."
                 : pagina.total() + (pagina.total() == 1 ? " transacción" : " transacciones"));
     }
 
+    /** Paginador del Figma "&lt; 1 - 2 - 3 &gt;" dentro de pnlPaginador. */
+    private void dibujarPaginador() {
+        pnlPaginador.removeAll();
+        JPanel botones = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));
+        botones.setOpaque(false);
+        if (totalPaginas > 1) {
+            botones.add(botonPagina("<", paginaActual - 1, paginaActual > 0, false));
+            int inicio = Math.max(0, Math.min(paginaActual - PAGINAS_VISIBLES / 2, totalPaginas - PAGINAS_VISIBLES));
+            int fin = Math.min(totalPaginas, inicio + PAGINAS_VISIBLES);
+            for (int i = inicio; i < fin; i++) {
+                if (i > inicio) {
+                    JLabel guion = new JLabel("-");
+                    guion.setForeground(Tema.MUTED);
+                    botones.add(guion);
+                }
+                botones.add(botonPagina(String.valueOf(i + 1), i, true, i == paginaActual));
+            }
+            botones.add(botonPagina(">", paginaActual + 1, paginaActual < totalPaginas - 1, false));
+        }
+        pnlPaginador.add(botones, BorderLayout.CENTER);
+        pnlPaginador.revalidate();
+        pnlPaginador.repaint();
+    }
+
+    /** Boton de una pagina; al pulsarlo busca esa pagina con el texto actual. */
+    private JButton botonPagina(String texto, int destino, boolean activo, boolean actual) {
+        JButton boton = new JButton(texto);
+        Tema.enlace(boton, actual ? Tema.TEXTO : Tema.MUTED, actual);
+        boton.setFont(Tema.fuente(actual ? Font.BOLD : Font.PLAIN, 16));
+        boton.setEnabled(activo && paginadorActivo);
+        boton.addActionListener(e -> {
+            if (!actual) {
+                paginaActual = destino;
+                buscar();
+            }
+        });
+        return boton;
+    }
+
     /** Texto del buscador + pagina actual + tamano 10. */
     public FiltroComprasDTO leerFiltro() {
         String texto = txtBuscar.getText().isBlank() ? null : txtBuscar.getText().strip();
-        int pagina = paginador == null ? 0 : paginador.pagina();
-        return new FiltroComprasDTO(texto, null, null, null, pagina, CoordinadorBoletos.FILAS_POR_PAGINA);
+        return new FiltroComprasDTO(texto, null, null, null, paginaActual, FILAS_POR_PAGINA);
     }
 
     /** Deshabilita botones y muestra "Cargando…" mientras corre la tarea. */
     public void ocupado(boolean ocupado) {
         btnBuscar.setEnabled(!ocupado);
         btnPanel.setEnabled(!ocupado);
-        if (paginador != null) {
-            paginador.setEnabled(!ocupado);
-        }
+        paginadorActivo = !ocupado;
+        dibujarPaginador();
         lblEstado.setText(ocupado ? "Cargando…" : "");
         if (ocupado) {
             mostrarError(null);

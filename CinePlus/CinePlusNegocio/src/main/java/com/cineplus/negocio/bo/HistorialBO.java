@@ -29,7 +29,7 @@ public class HistorialBO {
     /** Compras del usuario con filtros y paginacion. */
     public PaginaDTO<CompraDTO> consultarHistorial(Integer idUsuario, FiltroComprasDTO filtro) throws Exception {
         ValidacionesHistorial.filtro(filtro);
-        EstadoPago estado = ValidacionesHistorial.estado(filtro.estado());
+        EstadoPago estado = estado(filtro.estado());
 
         try (UnitOfWork uow = new UnitOfWork()) {
             ICompraDAO dao = uow.compraDAO();
@@ -68,6 +68,7 @@ public class HistorialBO {
 
             Compra compra = buscarDelUsuario(uow, idUsuario, datos.idCompra());
             if (!esCancelable(compra, ahora)) {
+                uow.rollback();
                 throw new Exception(NO_CANCELABLE);
             }
 
@@ -75,14 +76,15 @@ public class HistorialBO {
             compra.setMotivoCancelacion(datos.motivo().strip());
             compra.setFechaCancelacion(ahora);
 
-            // Se devuelven los puntos usados y se quitan los ganados, sin quedar en negativo
+            // Se devuelven los puntos usados y se quitan los ganados, sin quedar en negativo.
+            // El usuario se cargo con la compra en el mismo UnitOfWork, asi que sus puntos
+            // se guardan junto con la compra al hacer actualizar/commit.
             Usuario usuario = compra.getUsuario();
             int puntos = valor(usuario.getPuntosAcumulados())
                     + valor(compra.getPuntosUsados())
                     - valor(compra.getPuntosGanados());
             usuario.setPuntosAcumulados(Math.max(0, puntos));
 
-            uow.usuarioDAO().actualizar(usuario);
             Compra cancelada = uow.compraDAO().actualizar(compra);
             // Los asientos quedan libres solos: las compras canceladas no cuentan como ocupadas
             CompraDTO resultado = ConvertidorCompra.aDTO(cancelada, false);
@@ -94,7 +96,7 @@ public class HistorialBO {
     /** Todas las compras para el admin. */
     public PaginaDTO<TransaccionDTO> listarTransacciones(FiltroComprasDTO filtro) throws Exception {
         ValidacionesHistorial.filtro(filtro);
-        EstadoPago estado = ValidacionesHistorial.estado(filtro.estado());
+        EstadoPago estado = estado(filtro.estado());
 
         try (UnitOfWork uow = new UnitOfWork()) {
             ICompraDAO dao = uow.compraDAO();
@@ -130,5 +132,22 @@ public class HistorialBO {
 
     private static int valor(Integer numero) {
         return numero != null ? numero : 0;
+    }
+
+    /**
+     * Convierte el texto del filtro de estado a EstadoPago. Acepta el nombre
+     * ("APROBADO") o la etiqueta ("Aprobado"). Vacio o null = sin filtro.
+     */
+    private static EstadoPago estado(String texto) throws Exception {
+        if (texto == null || texto.isBlank()) {
+            return null;
+        }
+        String buscado = texto.strip();
+        for (EstadoPago estado : EstadoPago.values()) {
+            if (estado.name().equalsIgnoreCase(buscado) || estado.getEtiqueta().equalsIgnoreCase(buscado)) {
+                return estado;
+            }
+        }
+        throw new Exception("El estado de la compra no es válido.");
     }
 }

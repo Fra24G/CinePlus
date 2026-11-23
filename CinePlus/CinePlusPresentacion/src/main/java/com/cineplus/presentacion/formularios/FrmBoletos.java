@@ -3,7 +3,6 @@ package com.cineplus.presentacion.formularios;
 import com.cineplus.dto.BoletoDTO;
 import com.cineplus.dto.PaginaDTO;
 import com.cineplus.presentacion.CoordinadorAplicacion;
-import com.cineplus.presentacion.Paginador;
 import com.cineplus.presentacion.PanelEncabezado;
 import com.cineplus.presentacion.PanelNavegacion;
 import com.cineplus.presentacion.Seccion;
@@ -13,6 +12,7 @@ import com.cineplus.presentacion.TarjetaBoleto;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.GridBagConstraints;
@@ -40,13 +40,17 @@ public class FrmBoletos extends JFrame {
 
     private static final String LISTA = "lista";
     private static final String VACIO = "vacio";
+    /** Cuantos numeros de pagina se muestran como maximo en el paginador. */
+    private static final int PAGINAS_VISIBLES = 7;
 
     private CoordinadorAplicacion coordinador;
     private final JPanel pnlTarjetas = new JPanel(new GridLayout(0, 2, 16, 16));
     private final CardLayout tarjetas = new CardLayout();
     private final JPanel pnlVistas = new JPanel(tarjetas);
     private final JButton btnIrInicio = new JButton("Ir a Inicio");
-    private Paginador paginador;
+    private int paginaActual;
+    private int totalPaginas;
+    private boolean paginadorActivo = true;
 
     /** Constructor para el editor visual de NetBeans. */
     public FrmBoletos() {
@@ -59,8 +63,6 @@ public class FrmBoletos extends JFrame {
         this();
         this.coordinador = coordinador;
         pnlNavegacion.add(new PanelNavegacion(coordinador, Seccion.BOLETOS), BorderLayout.CENTER);
-        paginador = new Paginador(pagina -> coordinador.boletos().cargarBoletos(this, pagina));
-        pnlPaginador.add(paginador, BorderLayout.CENTER);
         btnIrInicio.addActionListener(e -> coordinador.inicio());
         coordinador.boletos().cargarBoletos(this, 0);
     }
@@ -156,16 +158,56 @@ public class FrmBoletos extends JFrame {
             pnlTarjetas.add(new TarjetaBoleto(boleto, coordinador));
         }
         tarjetas.show(pnlVistas, pagina.total() == 0 ? VACIO : LISTA);
-        paginador.mostrar(pagina);
+        paginaActual = pagina.pagina();
+        totalPaginas = pagina.totalPaginas();
+        dibujarPaginador();
         pnlTarjetas.revalidate();
         pnlTarjetas.repaint();
     }
 
+    /** Paginador del Figma "&lt; 1 - 2 - 3 &gt;" dentro de pnlPaginador. */
+    private void dibujarPaginador() {
+        pnlPaginador.removeAll();
+        JPanel botones = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));
+        botones.setOpaque(false);
+        if (totalPaginas > 1) {
+            botones.add(botonPagina("<", paginaActual - 1, paginaActual > 0, false));
+            int inicio = Math.max(0, Math.min(paginaActual - PAGINAS_VISIBLES / 2, totalPaginas - PAGINAS_VISIBLES));
+            int fin = Math.min(totalPaginas, inicio + PAGINAS_VISIBLES);
+            for (int i = inicio; i < fin; i++) {
+                if (i > inicio) {
+                    JLabel guion = new JLabel("-");
+                    guion.setForeground(Tema.MUTED);
+                    botones.add(guion);
+                }
+                botones.add(botonPagina(String.valueOf(i + 1), i, true, i == paginaActual));
+            }
+            botones.add(botonPagina(">", paginaActual + 1, paginaActual < totalPaginas - 1, false));
+        }
+        pnlPaginador.add(botones, BorderLayout.CENTER);
+        pnlPaginador.revalidate();
+        pnlPaginador.repaint();
+    }
+
+    /** Boton de una pagina; al pulsarlo pide esa pagina al coordinador. */
+    private JButton botonPagina(String texto, int destino, boolean activo, boolean actual) {
+        JButton boton = new JButton(texto);
+        Tema.enlace(boton, actual ? Tema.TEXTO : Tema.MUTED, actual);
+        boton.setFont(Tema.fuente(actual ? Font.BOLD : Font.PLAIN, 16));
+        boton.setEnabled(activo && paginadorActivo);
+        boton.addActionListener(e -> {
+            if (!actual) {
+                paginaActual = destino;
+                coordinador.boletos().cargarBoletos(this, destino);
+            }
+        });
+        return boton;
+    }
+
     /** Deshabilita el paginador y muestra "Cargando…" mientras corre la tarea. */
     public void ocupado(boolean ocupado) {
-        if (paginador != null) {
-            paginador.setEnabled(!ocupado);
-        }
+        paginadorActivo = !ocupado;
+        dibujarPaginador();
         btnIrInicio.setEnabled(!ocupado);
         lblEstado.setText(ocupado ? "Cargando…" : "");
         if (ocupado) {

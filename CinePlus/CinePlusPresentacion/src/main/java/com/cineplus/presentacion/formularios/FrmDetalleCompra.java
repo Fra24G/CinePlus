@@ -3,7 +3,6 @@ package com.cineplus.presentacion.formularios;
 import com.cineplus.dto.BoletoDTO;
 import com.cineplus.dto.CompraDTO;
 import com.cineplus.presentacion.CoordinadorAplicacion;
-import com.cineplus.presentacion.FormatoCompra;
 import com.cineplus.presentacion.PanelEncabezado;
 import com.cineplus.presentacion.PanelNavegacion;
 import com.cineplus.presentacion.Seccion;
@@ -15,8 +14,13 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -35,6 +39,11 @@ import javax.swing.JPanel;
  * @author Mario Perez
  */
 public class FrmDetalleCompra extends JFrame {
+
+    private static final DateTimeFormatter FECHA_LARGA =
+            DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.forLanguageTag("es-MX"));
+    private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter FECHA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private CoordinadorAplicacion coordinador;
     private Integer idCompra;
@@ -111,22 +120,18 @@ public class FrmDetalleCompra extends JFrame {
         for (JButton visual : new JButton[]{btnFacturar, btnCorreo, btnAyuda}) {
             visual.addActionListener(e -> lblEstado.setText(visual.getText() + ": próximamente."));
         }
-        btnCancelar.addActionListener(e -> {
-            if (compra != null) {
-                coordinador.boletos().pedirCancelacion(this, compra);
-            }
-        });
+        btnCancelar.addActionListener(e -> coordinador.boletos().pedirCancelacion(this, compra));
     }
 
     /** Muestra la compra. El boton Cancelar solo aparece si compra.cancelable(). */
     public void mostrarCompra(CompraDTO compra) {
         this.compra = compra;
-        lblTitulo.setText("Detalles compra " + FormatoCompra.numeroCompra(compra.idCompra()));
+        lblTitulo.setText("Detalles compra #" + compra.idCompra());
 
         pnlFuncion.removeAll();
         agregar(pnlFuncion, compra.tituloPelicula(), Font.BOLD, 26, Tema.TEXTO);
-        agregar(pnlFuncion, FormatoCompra.fechaLarga(compra.fechaHoraFuncion())
-                + " · " + FormatoCompra.hora(compra.fechaHoraFuncion()), Font.BOLD, 17, Tema.TEXTO_SUAVE);
+        agregar(pnlFuncion, fechaLarga(compra.fechaHoraFuncion())
+                + " · " + formato(compra.fechaHoraFuncion(), HORA), Font.BOLD, 17, Tema.TEXTO_SUAVE);
         agregar(pnlFuncion, compra.tipoFuncion(), Font.PLAIN, 15, Tema.MUTED);
         pnlFuncion.add(Box.createVerticalStrut(14));
         agregar(pnlFuncion, "Asientos: " + asientos(compra), Font.BOLD, 17, Tema.TEXTO);
@@ -145,18 +150,18 @@ public class FrmDetalleCompra extends JFrame {
         pnlDesglose.removeAll();
         agregar(pnlDesglose, "Desglose", Font.BOLD, 20, Tema.TEXTO);
         pnlDesglose.add(Box.createVerticalStrut(10));
-        fila(pnlDesglose, "Boletos (" + compra.boletos().size() + ")", FormatoCompra.dinero(compra.subtotal()));
-        fila(pnlDesglose, "Cargo por servicio", FormatoCompra.dinero(compra.cargoServicio()));
+        fila(pnlDesglose, "Boletos (" + compra.boletos().size() + ")", dinero(compra.subtotal()));
+        fila(pnlDesglose, "Cargo por servicio", dinero(compra.cargoServicio()));
         if (compra.puntosUsados() > 0) {
             fila(pnlDesglose, "Puntos usados (" + compra.puntosUsados() + ")",
-                    "-" + FormatoCompra.dinero(compra.descuentoPuntos()));
+                    "-" + dinero(compra.descuentoPuntos()));
         }
-        fila(pnlDesglose, "Total", FormatoCompra.dinero(compra.montoCobrado()));
+        fila(pnlDesglose, "Total", dinero(compra.montoCobrado()));
         if (compra.puntosGanados() > 0) {
             fila(pnlDesglose, "Puntos ganados", "+" + compra.puntosGanados());
         }
         pnlDesglose.add(Box.createVerticalStrut(14));
-        agregar(pnlDesglose, "Compra: " + FormatoCompra.fechaHora(compra.fechaCompra()), Font.PLAIN, 14, Tema.MUTED);
+        agregar(pnlDesglose, "Compra: " + formato(compra.fechaCompra(), FECHA_HORA), Font.PLAIN, 14, Tema.MUTED);
         agregar(pnlDesglose, textoPago(compra), Font.PLAIN, 14, Tema.MUTED);
 
         btnCancelar.setVisible(compra.cancelable());
@@ -181,6 +186,26 @@ public class FrmDetalleCompra extends JFrame {
             texto += " terminación ****" + compra.ultimosDigitos();
         }
         return texto;
+    }
+
+    /** "Jueves 5 de noviembre". */
+    private static String fechaLarga(LocalDateTime fecha) {
+        if (fecha == null) {
+            return "";
+        }
+        String texto = FECHA_LARGA.format(fecha);
+        return Character.toUpperCase(texto.charAt(0)) + texto.substring(1);
+    }
+
+    private static String formato(LocalDateTime fecha, DateTimeFormatter formato) {
+        return fecha == null ? "" : formato.format(fecha);
+    }
+
+    /** "$300" o "$179.50". */
+    private static String dinero(double monto) {
+        DecimalFormat formato = new DecimalFormat(monto == Math.floor(monto) ? "#,##0" : "#,##0.00",
+                DecimalFormatSymbols.getInstance(Locale.US));
+        return "$" + formato.format(monto);
     }
 
     private static Color colorEstado(String estado) {

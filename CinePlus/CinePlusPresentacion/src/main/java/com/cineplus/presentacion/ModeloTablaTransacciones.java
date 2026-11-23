@@ -1,22 +1,25 @@
 package com.cineplus.presentacion;
 
 import com.cineplus.dto.TransaccionDTO;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.table.AbstractTableModel;
 
 /**
  * Modelo de la tabla "Historial de Transacciones" del admin.
- * Columnas: ID, Hora, Cliente, Concepto, Metodos, Total, Estado. El estado se pinta
- * con ModeloTablaCompras.RendererEstado (Aprobado en verde y Denegado en rojo).
+ * Columnas: ID, Hora, Cliente, Concepto, Metodos, Total, Estado. Usa el mismo
+ * formato que la tabla de compras.
  *
  * @author Mario Perez
  */
 public class ModeloTablaTransacciones extends AbstractTableModel {
 
     private static final String[] COLUMNAS = {"ID", "Hora", "Cliente", "Concepto", "Métodos", "Total", "Estado"};
-    /** Columna del estado, para ponerle el renderer. */
-    public static final int COLUMNA_ESTADO = 6;
+    private static final DateTimeFormatter FECHA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final List<TransaccionDTO> transacciones = new ArrayList<>();
 
@@ -48,12 +51,12 @@ public class ModeloTablaTransacciones extends AbstractTableModel {
     public Object getValueAt(int fila, int columna) {
         TransaccionDTO transaccion = transacciones.get(fila);
         return switch (columna) {
-            case 0 -> FormatoCompra.numeroCompra(transaccion.idCompra());
-            case 1 -> FormatoCompra.fechaHora(transaccion.fechaHora());
+            case 0 -> transaccion.idCompra() == null ? "" : "#" + transaccion.idCompra();
+            case 1 -> transaccion.fechaHora() == null ? "" : FECHA_HORA.format(transaccion.fechaHora());
             case 2 -> transaccion.cliente();
             case 3 -> transaccion.concepto();
-            case 4 -> FormatoCompra.metodo(transaccion.metodo(), transaccion.ultimosDigitos());
-            case 5 -> FormatoCompra.dinero(transaccion.total());
+            case 4 -> metodo(transaccion.metodo(), transaccion.ultimosDigitos());
+            case 5 -> dinero(transaccion.total());
             case 6 -> transaccion.estado();
             default -> "";
         };
@@ -62,5 +65,20 @@ public class ModeloTablaTransacciones extends AbstractTableModel {
     @Override
     public boolean isCellEditable(int fila, int columna) {
         return false;
+    }
+
+    /** "... 3845" si se pago con tarjeta; si no, el nombre del metodo. */
+    private static String metodo(String metodo, String ultimosDigitos) {
+        if (ultimosDigitos != null && !ultimosDigitos.isBlank()) {
+            return "... " + ultimosDigitos;
+        }
+        return metodo == null ? "" : metodo;
+    }
+
+    /** "$300" o "$179.50". */
+    private static String dinero(double monto) {
+        DecimalFormat formato = new DecimalFormat(monto == Math.floor(monto) ? "#,##0" : "#,##0.00",
+                DecimalFormatSymbols.getInstance(Locale.US));
+        return "$" + formato.format(monto);
     }
 }

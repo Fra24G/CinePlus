@@ -1,15 +1,14 @@
 package com.cineplus.presentacion;
 
 import com.cineplus.dto.CompraDTO;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JLabel;
-import javax.swing.JTable;
+import java.util.Locale;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * Modelo de la tabla "Historial de compras".
@@ -20,8 +19,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class ModeloTablaCompras extends AbstractTableModel {
 
     private static final String[] COLUMNAS = {"ID", "Fecha", "Hora", "Concepto", "Métodos", "Total", "Estado"};
-    /** Columna del estado, para ponerle RendererEstado. */
-    public static final int COLUMNA_ESTADO = 6;
+    private static final DateTimeFormatter FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm");
 
     private final List<CompraDTO> compras = new ArrayList<>();
 
@@ -58,12 +57,12 @@ public class ModeloTablaCompras extends AbstractTableModel {
     public Object getValueAt(int fila, int columna) {
         CompraDTO compra = compras.get(fila);
         return switch (columna) {
-            case 0 -> FormatoCompra.numeroCompra(compra.idCompra());
-            case 1 -> FormatoCompra.fecha(compra.fechaCompra());
-            case 2 -> FormatoCompra.hora(compra.fechaCompra());
+            case 0 -> compra.idCompra() == null ? "" : "#" + compra.idCompra();
+            case 1 -> formato(compra.fechaCompra(), FECHA);
+            case 2 -> formato(compra.fechaCompra(), HORA);
             case 3 -> compra.tituloPelicula();
-            case 4 -> FormatoCompra.metodo(compra.metodoPago(), compra.ultimosDigitos());
-            case 5 -> FormatoCompra.dinero(compra.montoCobrado());
+            case 4 -> metodo(compra.metodoPago(), compra.ultimosDigitos());
+            case 5 -> dinero(compra.montoCobrado());
             case 6 -> compra.estado();
             default -> "";
         };
@@ -74,54 +73,22 @@ public class ModeloTablaCompras extends AbstractTableModel {
         return false;
     }
 
-    /**
-     * Estilo comun de las tablas de historial y transacciones: filas altas, sin
-     * reordenar columnas, una sola seleccion y el estado con color.
-     */
-    public static void configurarTabla(JTable tabla, int columnaEstado) {
-        tabla.setRowHeight(36);
-        tabla.setFont(Tema.fuente(Font.PLAIN, 14));
-        tabla.getTableHeader().setFont(Tema.fuente(Font.BOLD, 14));
-        tabla.getTableHeader().setReorderingAllowed(false);
-        tabla.getTableHeader().setBackground(Tema.NAV_FONDO);
-        tabla.getTableHeader().setForeground(Tema.TEXTO);
-        tabla.getTableHeader().putClientProperty("FlatLaf.style",
-                "background: " + Tema.hex(Tema.NAV_FONDO) + "; separatorColor: " + Tema.hex(Tema.NAV_BORDE)
-                + "; bottomSeparatorColor: " + Tema.hex(Tema.NAV_BORDE) + "; height: 38");
-        tabla.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tabla.setShowVerticalLines(false);
-        tabla.setFillsViewportHeight(true);
-        tabla.setBackground(Tema.TARJETA_MORADA);
-        tabla.setForeground(Tema.TEXTO);
-        tabla.setGridColor(Tema.BORDE_TARJETA);
-        tabla.setSelectionBackground(Tema.NAV_ACTIVO);
-        tabla.setSelectionForeground(Tema.TEXTO);
-        tabla.getColumnModel().getColumn(columnaEstado).setCellRenderer(new RendererEstado());
+    private static String formato(LocalDateTime fecha, DateTimeFormatter formato) {
+        return fecha == null ? "" : formato.format(fecha);
     }
 
-    /**
-     * Pinta el estado: Aprobado en verde, Denegado en rojo y Cancelado en gris.
-     * Lo reutiliza la tabla de transacciones.
-     */
-    public static final class RendererEstado extends DefaultTableCellRenderer {
-
-        // TODO: pedir a Desarrollador 1 que agregue este verde a Tema
-        private static final Color VERDE = new Color(0x4cc38a);
-
-        @Override
-        public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean seleccionada,
-                boolean foco, int fila, int columna) {
-            JLabel celda = (JLabel) super.getTableCellRendererComponent(tabla, valor, seleccionada, foco, fila, columna);
-            String estado = valor == null ? "" : valor.toString();
-            celda.setFont(celda.getFont().deriveFont(Font.BOLD));
-            if (!seleccionada) {
-                celda.setForeground(switch (estado) {
-                    case "Aprobado" -> VERDE;
-                    case "Denegado" -> Tema.ERROR;
-                    default -> Tema.MUTED;
-                });
-            }
-            return celda;
+    /** "... 3845" si se pago con tarjeta; si no, el nombre del metodo. */
+    private static String metodo(String metodo, String ultimosDigitos) {
+        if (ultimosDigitos != null && !ultimosDigitos.isBlank()) {
+            return "... " + ultimosDigitos;
         }
+        return metodo == null ? "" : metodo;
+    }
+
+    /** "$300" o "$179.50". */
+    private static String dinero(double monto) {
+        DecimalFormat formato = new DecimalFormat(monto == Math.floor(monto) ? "#,##0" : "#,##0.00",
+                DecimalFormatSymbols.getInstance(Locale.US));
+        return "$" + formato.format(monto);
     }
 }

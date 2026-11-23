@@ -2,15 +2,19 @@ package com.cineplus.presentacion.formularios;
 
 import com.cineplus.dto.BoletoDTO;
 import com.cineplus.dto.CompraDTO;
-import com.cineplus.presentacion.FormatoCompra;
 import com.cineplus.presentacion.Tema;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.swing.BorderFactory;
@@ -38,6 +42,9 @@ public class DlgCancelacion extends javax.swing.JDialog {
 
     private static final int MOTIVO_MINIMO = 5;
     private static final int MOTIVO_MAXIMO = 300;
+    private static final DateTimeFormatter FECHA_LARGA =
+            DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.forLanguageTag("es-MX"));
+    private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm");
 
     private CompraDTO compra;
     private String motivo;
@@ -90,12 +97,11 @@ public class DlgCancelacion extends javax.swing.JDialog {
         Tema.tarjetaConBorde(resumen, Tema.TARJETA_MORADA, Tema.BORDE_TARJETA, 14, new Insets(14, 18, 14, 18));
         resumen.setLayout(new BoxLayout(resumen, BoxLayout.Y_AXIS));
         agregar(resumen, compra.tituloPelicula(), Font.BOLD, 20);
-        agregar(resumen, FormatoCompra.fechaLarga(compra.fechaHoraFuncion()) + " · "
-                + FormatoCompra.hora(compra.fechaHoraFuncion()), Font.PLAIN, 15);
+        agregar(resumen, fechaYHora(compra.fechaHoraFuncion()), Font.PLAIN, 15);
         agregar(resumen, compra.cine() + " SALA " + compra.numeroSala(), Font.PLAIN, 15);
         agregar(resumen, "Asientos: " + asientos(), Font.PLAIN, 15);
-        agregar(resumen, "Compra " + FormatoCompra.numeroCompra(compra.idCompra())
-                + " · Total " + FormatoCompra.dinero(compra.montoCobrado()), Font.BOLD, 15);
+        agregar(resumen, "Compra #" + compra.idCompra()
+                + " · Total " + dinero(compra.montoCobrado()), Font.BOLD, 15);
         if (compra.puntosUsados() > 0 || compra.puntosGanados() > 0) {
             agregar(resumen, "<html>Se te devolverán " + compra.puntosUsados()
                     + " puntos usados y se quitarán " + compra.puntosGanados() + " puntos ganados.</html>",
@@ -186,6 +192,22 @@ public class DlgCancelacion extends javax.swing.JDialog {
             lista.add(boleto.asiento());
         }
         return lista.isEmpty() ? "—" : String.join(", ", lista);
+    }
+
+    /** "Jueves 5 de noviembre · 18:30". */
+    private static String fechaYHora(LocalDateTime fecha) {
+        if (fecha == null) {
+            return "";
+        }
+        String texto = FECHA_LARGA.format(fecha);
+        return Character.toUpperCase(texto.charAt(0)) + texto.substring(1) + " · " + HORA.format(fecha);
+    }
+
+    /** "$300" o "$179.50". */
+    private static String dinero(double monto) {
+        DecimalFormat formato = new DecimalFormat(monto == Math.floor(monto) ? "#,##0" : "#,##0.00",
+                DecimalFormatSymbols.getInstance(Locale.US));
+        return "$" + formato.format(monto);
     }
 
     private static void agregar(JPanel panel, String texto, int estilo, int tamano) {

@@ -2,7 +2,6 @@ package com.cineplus.negocio.bo;
 
 import com.cineplus.dto.CancelacionDTO;
 import com.cineplus.dto.FiltroComprasDTO;
-import com.cineplus.entidades.enums.EstadoPago;
 
 /**
  * Reglas de validacion del modulo. Los mensajes se muestran tal cual en la pantalla.
@@ -12,14 +11,14 @@ import com.cineplus.entidades.enums.EstadoPago;
  */
 final class ValidacionesHistorial {
 
-    static final int TAMANO_MAXIMO_PAGINA = 50;
-    static final int MOTIVO_MINIMO = 5;
-    static final int MOTIVO_MAXIMO = 300;
+    private static final int TAMANO_MAXIMO_PAGINA = 50;
+    private static final int MOTIVO_MINIMO = 5;
+    private static final int MOTIVO_MAXIMO = 300;
 
     private ValidacionesHistorial() {
     }
 
-    /** Valida filtros y paginacion. */
+    /** Valida filtros y paginacion. El estado lo convierte y valida HistorialBO. */
     static void filtro(FiltroComprasDTO filtro) throws Exception {
         if (filtro == null) {
             throw new Exception("Indica los filtros de búsqueda.");
@@ -33,7 +32,6 @@ final class ValidacionesHistorial {
         if (filtro.tamano() < 1 || filtro.tamano() > TAMANO_MAXIMO_PAGINA) {
             throw new Exception("El tamaño de página debe ser de 1 a " + TAMANO_MAXIMO_PAGINA + ".");
         }
-        estado(filtro.estado());
     }
 
     /** Valida la peticion de cancelacion. */
@@ -46,22 +44,5 @@ final class ValidacionesHistorial {
             throw new Exception("El motivo de cancelación debe tener de "
                     + MOTIVO_MINIMO + " a " + MOTIVO_MAXIMO + " caracteres.");
         }
-    }
-
-    /**
-     * Convierte el texto del filtro de estado a EstadoPago. Acepta el nombre
-     * ("APROBADO") o la etiqueta ("Aprobado"). Vacio o null = sin filtro.
-     */
-    static EstadoPago estado(String texto) throws Exception {
-        if (texto == null || texto.isBlank()) {
-            return null;
-        }
-        String buscado = texto.strip();
-        for (EstadoPago estado : EstadoPago.values()) {
-            if (estado.name().equalsIgnoreCase(buscado) || estado.getEtiqueta().equalsIgnoreCase(buscado)) {
-                return estado;
-            }
-        }
-        throw new Exception("El estado de la compra no es válido.");
     }
 }

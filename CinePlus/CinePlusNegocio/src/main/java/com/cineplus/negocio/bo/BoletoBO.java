@@ -16,6 +16,9 @@ import java.util.List;
  * @author Mario Perez
  */
 public class BoletoBO {
+
+    private static final int TAMANO_MAXIMO_PAGINA = 50;
+
     private final IGeneradorQR generadorQR;
 
     public BoletoBO(IGeneradorQR generadorQR) {
@@ -27,7 +30,7 @@ public class BoletoBO {
         if (idUsuario == null) {
             throw new Exception("No se encontró el usuario.");
         }
-        if (pagina < 0 || tamano < 1 || tamano > ValidacionesHistorial.TAMANO_MAXIMO_PAGINA) {
+        if (pagina < 0 || tamano < 1 || tamano > TAMANO_MAXIMO_PAGINA) {
             throw new Exception("La página no es válida.");
         }
         try (UnitOfWork uow = new UnitOfWork()) {
