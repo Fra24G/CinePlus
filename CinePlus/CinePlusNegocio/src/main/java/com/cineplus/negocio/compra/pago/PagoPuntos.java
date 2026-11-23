@@ -2,18 +2,21 @@ package com.cineplus.negocio.compra.pago;
 
 import com.cineplus.dto.DatosPagoDTO;
 import com.cineplus.entidades.enums.MetodoPago;
+import com.cineplus.negocio.compra.ReglasPrecio;
 
 /**
- * PATRON STRATEGY. Pago cuando los puntos cubren todo el total.
+ * Pago cuando los puntos cubren todo el total.
  *
- * @author luisf
+ * @author yakor
  */
 public class PagoPuntos implements IEstrategiaPago {
 
     @Override
     public ResultadoPago cobrar(double monto, DatosPagoDTO datos) throws Exception {
-        // Lo implementa el Desarrollador 3
-        throw new Exception("Pendiente: PagoPuntos.cobrar");
+        if (ReglasPrecio.redondear(monto) > 0) {
+            throw new Exception("Tus puntos no cubren el total.");
+        }
+        return new ResultadoPago(true, MetodoPago.PUNTOS, null, "Pago aprobado");
     }
 
     @Override

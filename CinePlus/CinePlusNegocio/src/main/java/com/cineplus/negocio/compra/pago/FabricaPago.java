@@ -1,20 +1,31 @@
 package com.cineplus.negocio.compra.pago;
 
 import com.cineplus.dto.DatosPagoDTO;
+import com.cineplus.negocio.compra.ReglasPrecio;
 
 /**
- * Elige la estrategia de pago segun el metodo elegido y el monto a cobrar.
+ * elige la estrategia de pago segun el metodo elegido y el monto a cobrar
  *
- * @author luisf
+ * @author yakor
  */
 public final class FabricaPago {
 
     private FabricaPago() {
     }
 
-    /** monto 0 = PagoPuntos; TARJETA = PagoTarjeta; APPLE_GOOGLE_PAY = PagoBilletera. */
     public static IEstrategiaPago para(DatosPagoDTO datos, double monto) throws Exception {
-        // Lo implementa el Desarrollador 3
-        throw new Exception("Pendiente: FabricaPago.para");
+        if (datos == null) {
+            throw new Exception("Elige un método de pago.");
+        }
+        if (ReglasPrecio.redondear(monto) <= 0) {
+            return new PagoPuntos();
+        }
+        if (datos.metodo() == null) {
+            throw new Exception("Elige un método de pago.");
+        }
+        return switch (datos.metodo()) {
+            case TARJETA -> new PagoTarjeta();
+            case APPLE_GOOGLE_PAY -> new PagoBilletera();
+        };
     }
 }
