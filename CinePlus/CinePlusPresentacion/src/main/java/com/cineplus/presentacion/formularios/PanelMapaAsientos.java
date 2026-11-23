@@ -1,7 +1,8 @@
 
-package com.cineplus.presentacion;
+package com.cineplus.presentacion.formularios;
 
 import com.cineplus.dto.AsientoDTO;
+import com.cineplus.presentacion.Tema;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
