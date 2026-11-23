@@ -1,0 +1,333 @@
+package com.cineplus.presentacion.formularios.admin;
+
+import com.cineplus.dto.FiltroComprasDTO;
+import com.cineplus.dto.PaginaDTO;
+import com.cineplus.dto.TransaccionDTO;
+import com.cineplus.presentacion.CoordinadorAplicacion;
+import com.cineplus.presentacion.ModeloTablaTransacciones;
+import com.cineplus.presentacion.Tema;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Font;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
+/**
+ * Pantalla "Historial de Transacciones" del admin (F21): barra admin (Panel /
+ * Transacciones), buscador "Buscar funcion o pelicula...", tabla con
+ * ModeloTablaTransacciones y paginacion de 10 en 10.
+ *
+ * @author Mario Perez
+ */
+public class FrmTransacciones extends JFrame {
+
+    /** Filas por pagina de la tabla. */
+    private static final int FILAS_POR_PAGINA = 10;
+    /** Cuantos numeros de pagina se muestran como maximo en el paginador. */
+    private static final int PAGINAS_VISIBLES = 7;
+    /** Columna "Estado" de ModeloTablaTransacciones. */
+    private static final int COLUMNA_ESTADO = 6;
+    /** Verde de "Aprobado". TODO: pedir a Desarrollador 1 que lo agregue a Tema. */
+    private static final Color VERDE = new Color(0x4cc38a);
+
+    private CoordinadorAplicacion coordinador;
+    private final ModeloTablaTransacciones modelo = new ModeloTablaTransacciones();
+    private final JTable tblTransacciones = new JTable(modelo);
+    private final JTextField txtBuscar = new JTextField(28);
+    private final JButton btnBuscar = new JButton("Buscar");
+    private final JButton btnPanel = new JButton("Panel");
+    private final JButton btnTransacciones = new JButton("Transacciones");
+    private final JButton btnCerrarSesion = new JButton("Cerrar sesión");
+    private final JLabel lblTotal = new JLabel(" ");
+    private int paginaActual;
+    private int totalPaginas;
+    private boolean paginadorActivo = true;
+
+    /** Constructor para el editor visual de NetBeans. */
+    public FrmTransacciones() {
+        initComponents();
+        configurarVista();
+    }
+
+    /** Arma la vista y carga la primera pagina sin filtro. */
+    public FrmTransacciones(CoordinadorAplicacion coordinador) {
+        this();
+        this.coordinador = coordinador;
+        conectarEventos();
+        buscar();
+    }
+
+    private void configurarVista() {
+        Tema.preparar(this);
+        setTitle("CinePlus · Historial de Transacciones");
+
+        // Barra admin: Panel / Transacciones
+        JPanel barra = new JPanel(new BorderLayout());
+        barra.setOpaque(false);
+        JPanel secciones = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        secciones.setOpaque(false);
+        JLabel lblLogo = Tema.logo(26);
+        secciones.add(lblLogo);
+        Tema.botonSecundario(btnPanel);
+        Tema.botonPrimario(btnTransacciones);
+        secciones.add(btnPanel);
+        secciones.add(btnTransacciones);
+        barra.add(secciones, BorderLayout.WEST);
+        Tema.botonSecundario(btnCerrarSesion);
+        JPanel derecha = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        derecha.setOpaque(false);
+        derecha.add(btnCerrarSesion);
+        barra.add(derecha, BorderLayout.EAST);
+        pnlCabecera.add(barra, BorderLayout.CENTER);
+
+        Tema.titulo(lblTitulo);
+
+        // Buscador
+        JPanel pnlBuscador = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        pnlBuscador.setOpaque(false);
+        Tema.campoFigma(txtBuscar, "Buscar función o película...", 20, 40);
+        txtBuscar.putClientProperty("JTextField.showClearButton", true);
+        Tema.botonPrimario(btnBuscar);
+        pnlBuscador.add(txtBuscar);
+        pnlBuscador.add(btnBuscar);
+
+        configurarTabla();
+        JScrollPane scroll = new JScrollPane(tblTransacciones);
+        scroll.setBorder(BorderFactory.createLineBorder(Tema.BORDE_TARJETA));
+
+        lblTotal.setForeground(Tema.MUTED);
+        lblTotal.setFont(Tema.fuente(Font.PLAIN, 13));
+
+        JPanel pnlTabla = new JPanel(new BorderLayout(0, 6));
+        pnlTabla.setOpaque(false);
+        pnlTabla.add(scroll, BorderLayout.CENTER);
+        pnlTabla.add(lblTotal, BorderLayout.SOUTH);
+
+        pnlCuerpo.setLayout(new BorderLayout(0, 12));
+        pnlCuerpo.add(pnlBuscador, BorderLayout.NORTH);
+        pnlCuerpo.add(pnlTabla, BorderLayout.CENTER);
+
+        lblError.setForeground(Tema.ERROR);
+        lblEstado.setForeground(Tema.MUTED);
+    }
+
+    /**
+     * Estilo de la tabla (el mismo que el historial): filas altas, sin reordenar
+     * columnas, una sola seleccion y el estado con color.
+     */
+    private void configurarTabla() {
+        tblTransacciones.setRowHeight(36);
+        tblTransacciones.setFont(Tema.fuente(Font.PLAIN, 14));
+        tblTransacciones.getTableHeader().setFont(Tema.fuente(Font.BOLD, 14));
+        tblTransacciones.getTableHeader().setReorderingAllowed(false);
+        tblTransacciones.getTableHeader().setBackground(Tema.NAV_FONDO);
+        tblTransacciones.getTableHeader().setForeground(Tema.TEXTO);
+        tblTransacciones.getTableHeader().putClientProperty("FlatLaf.style",
+                "background: " + Tema.hex(Tema.NAV_FONDO) + "; separatorColor: " + Tema.hex(Tema.NAV_BORDE)
+                + "; bottomSeparatorColor: " + Tema.hex(Tema.NAV_BORDE) + "; height: 38");
+        tblTransacciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblTransacciones.setShowVerticalLines(false);
+        tblTransacciones.setFillsViewportHeight(true);
+        tblTransacciones.setBackground(Tema.TARJETA_MORADA);
+        tblTransacciones.setForeground(Tema.TEXTO);
+        tblTransacciones.setGridColor(Tema.BORDE_TARJETA);
+        tblTransacciones.setSelectionBackground(Tema.NAV_ACTIVO);
+        tblTransacciones.setSelectionForeground(Tema.TEXTO);
+        tblTransacciones.getColumnModel().getColumn(COLUMNA_ESTADO).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean seleccionada,
+                    boolean foco, int fila, int columna) {
+                JLabel celda = (JLabel) super.getTableCellRendererComponent(tabla, valor, seleccionada, foco, fila, columna);
+                String estado = valor == null ? "" : valor.toString();
+                celda.setFont(celda.getFont().deriveFont(Font.BOLD));
+                if (!seleccionada) {
+                    celda.setForeground(switch (estado) {
+                        case "Aprobado" -> VERDE;
+                        case "Denegado" -> Tema.ERROR;
+                        default -> Tema.MUTED;
+                    });
+                }
+                return celda;
+            }
+        });
+    }
+
+    private void conectarEventos() {
+        btnPanel.addActionListener(e -> coordinador.admin().abrirPanel());
+        btnCerrarSesion.addActionListener(e -> coordinador.cerrarSesion());
+        btnBuscar.addActionListener(e -> filtrar());
+        txtBuscar.addActionListener(e -> filtrar());
+    }
+
+    /** Al cambiar la busqueda se regresa a la pagina 1. */
+    private void filtrar() {
+        paginaActual = 0;
+        buscar();
+    }
+
+    private void buscar() {
+        coordinador.boletos().cargarTransacciones(this, leerFiltro());
+    }
+
+    /** Llena la tabla y el paginador. */
+    public void mostrarTransacciones(PaginaDTO<TransaccionDTO> pagina) {
+        modelo.mostrar(pagina.elementos());
+        paginaActual = pagina.pagina();
+        totalPaginas = pagina.totalPaginas();
+        dibujarPaginador();
+        lblTotal.setText(pagina.total() == 0
+                ? "No hay transacciones."
+                : pagina.total() + (pagina.total() == 1 ? " transacción" : " transacciones"));
+    }
+
+    /** Paginador del Figma "&lt; 1 - 2 - 3 &gt;" dentro de pnlPaginador. */
+    private void dibujarPaginador() {
+        pnlPaginador.removeAll();
+        JPanel botones = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));
+        botones.setOpaque(false);
+        if (totalPaginas > 1) {
+            botones.add(botonPagina("<", paginaActual - 1, paginaActual > 0, false));
+            int inicio = Math.max(0, Math.min(paginaActual - PAGINAS_VISIBLES / 2, totalPaginas - PAGINAS_VISIBLES));
+            int fin = Math.min(totalPaginas, inicio + PAGINAS_VISIBLES);
+            for (int i = inicio; i < fin; i++) {
+                if (i > inicio) {
+                    JLabel guion = new JLabel("-");
+                    guion.setForeground(Tema.MUTED);
+                    botones.add(guion);
+                }
+                botones.add(botonPagina(String.valueOf(i + 1), i, true, i == paginaActual));
+            }
+            botones.add(botonPagina(">", paginaActual + 1, paginaActual < totalPaginas - 1, false));
+        }
+        pnlPaginador.add(botones, BorderLayout.CENTER);
+        pnlPaginador.revalidate();
+        pnlPaginador.repaint();
+    }
+
+    /** Boton de una pagina; al pulsarlo busca esa pagina con el texto actual. */
+    private JButton botonPagina(String texto, int destino, boolean activo, boolean actual) {
+        JButton boton = new JButton(texto);
+        Tema.enlace(boton, actual ? Tema.TEXTO : Tema.MUTED, actual);
+        boton.setFont(Tema.fuente(actual ? Font.BOLD : Font.PLAIN, 16));
+        boton.setEnabled(activo && paginadorActivo);
+        boton.addActionListener(e -> {
+            if (!actual) {
+                paginaActual = destino;
+                buscar();
+            }
+        });
+        return boton;
+    }
+
+    /** Texto del buscador + pagina actual + tamano 10. */
+    public FiltroComprasDTO leerFiltro() {
+        String texto = txtBuscar.getText().isBlank() ? null : txtBuscar.getText().strip();
+        return new FiltroComprasDTO(texto, null, null, null, paginaActual, FILAS_POR_PAGINA);
+    }
+
+    /** Deshabilita botones y muestra "Cargando…" mientras corre la tarea. */
+    public void ocupado(boolean ocupado) {
+        btnBuscar.setEnabled(!ocupado);
+        btnPanel.setEnabled(!ocupado);
+        paginadorActivo = !ocupado;
+        dibujarPaginador();
+        lblEstado.setText(ocupado ? "Cargando…" : "");
+        if (ocupado) {
+            mostrarError(null);
+        }
+    }
+
+    /** Muestra el mensaje de la Exception en la etiqueta roja (null la limpia). */
+    public void mostrarError(String mensaje) {
+        lblError.setText(mensaje == null || mensaje.isBlank()
+                ? ""
+                : "<html>" + Tema.escapar(mensaje) + "</html>");
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        pnlFondo = new javax.swing.JPanel();
+        pnlCabecera = new javax.swing.JPanel();
+        pnlContenido = new javax.swing.JPanel();
+        lblTitulo = new javax.swing.JLabel();
+        pnlCuerpo = new javax.swing.JPanel();
+        pnlPie = new javax.swing.JPanel();
+        lblError = new javax.swing.JLabel();
+        pnlPaginador = new javax.swing.JPanel();
+        lblEstado = new javax.swing.JLabel();
+        pnlNavegacion = new javax.swing.JPanel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        pnlFondo.setBackground(new java.awt.Color(23, 14, 20));
+        pnlFondo.setPreferredSize(new java.awt.Dimension(1110, 740));
+        pnlFondo.setLayout(new java.awt.BorderLayout(16, 16));
+
+        pnlCabecera.setOpaque(false);
+        pnlCabecera.setLayout(new java.awt.BorderLayout());
+        pnlFondo.add(pnlCabecera, java.awt.BorderLayout.NORTH);
+
+        pnlContenido.setOpaque(false);
+        pnlContenido.setLayout(new java.awt.BorderLayout(12, 12));
+
+        lblTitulo.setText("Historial de Transacciones");
+        pnlContenido.add(lblTitulo, java.awt.BorderLayout.NORTH);
+
+        pnlCuerpo.setOpaque(false);
+        pnlCuerpo.setLayout(new java.awt.BorderLayout());
+        pnlContenido.add(pnlCuerpo, java.awt.BorderLayout.CENTER);
+
+        pnlPie.setOpaque(false);
+        pnlPie.setLayout(new java.awt.BorderLayout(8, 8));
+
+        lblError.setText("");
+        pnlPie.add(lblError, java.awt.BorderLayout.NORTH);
+
+        pnlPaginador.setOpaque(false);
+        pnlPaginador.setLayout(new java.awt.BorderLayout());
+        pnlPie.add(pnlPaginador, java.awt.BorderLayout.CENTER);
+
+        lblEstado.setText("");
+        pnlPie.add(lblEstado, java.awt.BorderLayout.SOUTH);
+
+        pnlContenido.add(pnlPie, java.awt.BorderLayout.SOUTH);
+
+        pnlFondo.add(pnlContenido, java.awt.BorderLayout.CENTER);
+
+        pnlNavegacion.setOpaque(false);
+        pnlNavegacion.setLayout(new java.awt.BorderLayout());
+        pnlFondo.add(pnlNavegacion, java.awt.BorderLayout.SOUTH);
+
+        getContentPane().add(pnlFondo, java.awt.BorderLayout.CENTER);
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel lblError;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JPanel pnlCabecera;
+    private javax.swing.JPanel pnlContenido;
+    private javax.swing.JPanel pnlCuerpo;
+    private javax.swing.JPanel pnlFondo;
+    private javax.swing.JPanel pnlNavegacion;
+    private javax.swing.JPanel pnlPaginador;
+    private javax.swing.JPanel pnlPie;
+    // End of variables declaration//GEN-END:variables
+}
