@@ -30,9 +30,9 @@ public class CarteleraBO {
     /** Busca peliculas por titulo para agregarlas al catalogo*/
     public List<PeliculaDTO> buscar(String texto) throws Exception {
 
-        if (texto == null || texto.trim().isEmpty()) {
-            return List.of();
-        }
+       if (texto == null || texto.trim().length() < 2) {
+    return List.of();
+}
 
         return servicio.buscar(texto.trim());
     }

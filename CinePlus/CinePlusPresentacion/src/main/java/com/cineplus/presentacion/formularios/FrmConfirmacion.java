@@ -90,7 +90,7 @@ public class FrmConfirmacion extends JFrame {
         super.dispose();
     }
 
-    @SuppressWarnings("unchecked")
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         GridBagConstraints gbc;

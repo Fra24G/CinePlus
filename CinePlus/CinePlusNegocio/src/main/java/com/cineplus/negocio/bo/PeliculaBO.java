@@ -26,8 +26,7 @@ public class PeliculaBO {
     /** Peliculas de la BD en cartelera hoy */
     public List<PeliculaDTO> listarCartelera() throws Exception {
         try (UnitOfWork uow = new UnitOfWork()) {
-            List<Pelicula> peliculas =
-                    uow.peliculaDAO().listarEnCartelera(LocalDate.now());
+            List<Pelicula> peliculas = uow.peliculaDAO().listarEnCartelera(LocalDate.now());
 
             List<PeliculaDTO> resultado = new ArrayList<>();
 
@@ -61,8 +60,7 @@ public class PeliculaBO {
         }
 
         try (UnitOfWork uow = new UnitOfWork()) {
-            Optional<Pelicula> pelicula =
-                    uow.peliculaDAO().buscarPorId(idPelicula);
+            Optional<Pelicula> pelicula = uow.peliculaDAO().buscarPorId(idPelicula);
 
             if (pelicula.isEmpty()) {
                 throw new Exception("No se encontró la película.");
@@ -81,8 +79,7 @@ public class PeliculaBO {
         }
 
         try (UnitOfWork uow = new UnitOfWork()) {
-            Optional<Pelicula> pelicula =
-                    uow.peliculaDAO().buscarPorIdExterno(idExterno.trim());
+            Optional<Pelicula> pelicula = uow.peliculaDAO().buscarPorIdExterno(idExterno.trim());
 
             if (pelicula.isEmpty()) {
                 return Optional.empty();
@@ -105,8 +102,7 @@ public class PeliculaBO {
         }
 
         try (UnitOfWork uow = new UnitOfWork()) {
-            Optional<Pelicula> pelicula =
-                    uow.peliculaDAO().buscarPorIdExterno(idExterno.trim());
+            Optional<Pelicula> pelicula = uow.peliculaDAO().buscarPorIdExterno(idExterno.trim());
 
             if (pelicula.isEmpty()) {
                 return Optional.empty();
@@ -127,10 +123,16 @@ public class PeliculaBO {
             boolean nueva = datos.idPelicula() == null;
 
             if (nueva) {
+                // Si trae idExterno y ya existe en el catalogo no se duplica
+                String externo = datos.idExterno();
+                if (externo != null && !externo.isBlank()
+                        && uow.peliculaDAO()
+                                .buscarPorIdExterno(externo.trim()).isPresent()) {
+                    throw new Exception("Esa película ya está en el catálogo.");
+                }
                 pelicula = new Pelicula();
             } else {
-                Optional<Pelicula> encontrada =
-                        uow.peliculaDAO().buscarPorId(datos.idPelicula());
+                Optional<Pelicula> encontrada = uow.peliculaDAO().buscarPorId(datos.idPelicula());
 
                 if (encontrada.isEmpty()) {
                     throw new Exception("No se encontró la película que deseas actualizar.");
@@ -139,7 +141,11 @@ public class PeliculaBO {
                 pelicula = encontrada.get();
             }
 
-            pelicula.setIdExterno(datos.idExterno());
+           
+
+            pelicula.setIdExterno(
+            datos.idExterno() == null || datos.idExterno().isBlank()
+            ? null : datos.idExterno().trim());
             pelicula.setTitulo(datos.titulo().trim());
             pelicula.setDirector(datos.director());
             pelicula.setGenero(datos.genero());
@@ -165,7 +171,7 @@ public class PeliculaBO {
         }
     }
 
-    /** Importa una pelicula de TMDB sin duplicarla*/
+    /** Importa una pelicula de TMDB sin duplicarla */
     public PeliculaDTO importar(String idExterno, boolean enCartelera)
             throws Exception {
 
@@ -198,8 +204,7 @@ public class PeliculaBO {
                     pelicula.imagen(),
                     true,
                     LocalDate.now(),
-                    null
-            );
+                    null);
 
             return guardar(actualizada);
         }
@@ -235,8 +240,7 @@ public class PeliculaBO {
                 detalle.imagen(),
                 enCartelera,
                 inicio,
-                null
-        );
+                null);
 
         return guardar(nueva);
     }
@@ -252,8 +256,7 @@ public class PeliculaBO {
         try (UnitOfWork uow = new UnitOfWork()) {
             uow.iniciar();
 
-            Optional<Pelicula> encontrada =
-                    uow.peliculaDAO().buscarPorId(idPelicula);
+            Optional<Pelicula> encontrada = uow.peliculaDAO().buscarPorId(idPelicula);
 
             if (encontrada.isEmpty()) {
                 throw new Exception("No se encontró la película.");
@@ -294,15 +297,16 @@ public class PeliculaBO {
                 pelicula.getDirector(),
                 pelicula.getGenero(),
                 pelicula.getDuracionMinutos() != null
-                        ? pelicula.getDuracionMinutos() : 0,
+                        ? pelicula.getDuracionMinutos()
+                        : 0,
                 pelicula.getFechaEstreno(),
                 pelicula.getClasificacion() != null
-                        ? pelicula.getClasificacion().getEtiqueta() : "",
+                        ? pelicula.getClasificacion().getEtiqueta()
+                        : "",
                 pelicula.getSinopsis(),
                 pelicula.getImagen(),
                 Boolean.TRUE.equals(pelicula.getDisponible()),
                 pelicula.getInicioCartelera(),
-                pelicula.getFinCartelera()
-        );
+                pelicula.getFinCartelera());
     }
 }
