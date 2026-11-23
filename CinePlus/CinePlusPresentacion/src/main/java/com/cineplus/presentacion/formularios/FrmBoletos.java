@@ -31,7 +31,7 @@ import javax.swing.SwingConstants;
 
 /**
  * Pantalla "Vista de boletos" (F9): tarjetas de los boletos vigentes con paginador
- * "&lt; 1 - 2 - 3 &gt;", y su version vacia "No tienes compras actualmente..." con el
+ * y su version vacia "No tienes compras actualmente..." con el
  * boton Ir a Inicio.
  *
  * @author Mario Perez
@@ -165,7 +165,7 @@ public class FrmBoletos extends JFrame {
         pnlTarjetas.repaint();
     }
 
-    /** Paginador del Figma "&lt; 1 - 2 - 3 &gt;" dentro de pnlPaginador. */
+    /** Dibuja los numeros de pagina dentro de pnlPaginador. */
     private void dibujarPaginador() {
         pnlPaginador.removeAll();
         JPanel botones = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));

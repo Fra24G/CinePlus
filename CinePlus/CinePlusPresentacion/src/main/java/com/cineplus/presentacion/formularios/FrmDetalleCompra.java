@@ -169,7 +169,6 @@ public class FrmDetalleCompra extends JFrame {
         pnlCuerpo.repaint();
     }
 
-    /** "B7, B8, B9". */
     private static String asientos(CompraDTO compra) {
         List<String> lista = new ArrayList<>();
         for (BoletoDTO boleto : compra.boletos()) {
@@ -178,7 +177,6 @@ public class FrmDetalleCompra extends JFrame {
         return lista.isEmpty() ? "—" : String.join(", ", lista);
     }
 
-    /** "Pago con Tarjeta terminación ****2928" o "Pago con Puntos". */
     private static String textoPago(CompraDTO compra) {
         String texto = "Pago con " + (compra.metodoPago() == null || compra.metodoPago().isBlank()
                 ? "—" : compra.metodoPago());
@@ -188,7 +186,6 @@ public class FrmDetalleCompra extends JFrame {
         return texto;
     }
 
-    /** "Jueves 5 de noviembre". */
     private static String fechaLarga(LocalDateTime fecha) {
         if (fecha == null) {
             return "";
@@ -201,7 +198,6 @@ public class FrmDetalleCompra extends JFrame {
         return fecha == null ? "" : formato.format(fecha);
     }
 
-    /** "$300" o "$179.50". */
     private static String dinero(double monto) {
         DecimalFormat formato = new DecimalFormat(monto == Math.floor(monto) ? "#,##0" : "#,##0.00",
                 DecimalFormatSymbols.getInstance(Locale.US));

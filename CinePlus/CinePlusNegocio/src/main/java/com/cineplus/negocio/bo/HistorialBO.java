@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Objeto de negocio del historial, detalle, cancelacion y transacciones.
  *
- * @author luisf
  * @author Mario Perez
  */
 public class HistorialBO {
@@ -76,9 +75,7 @@ public class HistorialBO {
             compra.setMotivoCancelacion(datos.motivo().strip());
             compra.setFechaCancelacion(ahora);
 
-            // Se devuelven los puntos usados y se quitan los ganados, sin quedar en negativo.
-            // El usuario se cargo con la compra en el mismo UnitOfWork, asi que sus puntos
-            // se guardan junto con la compra al hacer actualizar/commit.
+            // Se devuelven los puntos usados y se quitan los ganados, sin quedar en negativo
             Usuario usuario = compra.getUsuario();
             int puntos = valor(usuario.getPuntosAcumulados())
                     + valor(compra.getPuntosUsados())

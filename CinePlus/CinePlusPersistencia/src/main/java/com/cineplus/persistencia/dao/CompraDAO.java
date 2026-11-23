@@ -14,7 +14,6 @@ import java.util.Optional;
 /**
  * Implementacion JPA del DAO de compras.
  *
- * @author luisf
  * @author Mario Perez
  */
 public class CompraDAO implements ICompraDAO {
@@ -157,7 +156,6 @@ public class CompraDAO implements ICompraDAO {
             this.idUsuario = idUsuario;
             this.texto = (texto == null || texto.isBlank()) ? null : texto.strip().toLowerCase();
             this.idCompraBuscada = this.texto == null ? null : numeroDeCompra(this.texto);
-            // fechaCompra es fecha y hora: "desde" empieza a las 00:00 y "hasta" incluye todo ese dia
             this.desde = desde == null ? null : desde.atStartOfDay();
             this.hasta = hasta == null ? null : hasta.plusDays(1).atStartOfDay();
             this.estado = estado;
@@ -209,7 +207,6 @@ public class CompraDAO implements ICompraDAO {
             }
         }
 
-        /** "#9081" o "9081" -> 9081. Si el texto no es un numero devuelve null. */
         private static Integer numeroDeCompra(String texto) {
             String limpio = texto.startsWith("#") ? texto.substring(1) : texto;
             if (limpio.isEmpty() || limpio.length() > 9 || !limpio.chars().allMatch(Character::isDigit)) {

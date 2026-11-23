@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 /**
  * Tarjeta de un boleto en "Mis boletos": pelicula, fecha y hora, tipo, asiento,
  * cine y sala, codigo y el enlace "Ver detalles de compra...". A la izquierda va
- * el espacio del codigo QR (se conecta al final, cuando quede GeneradorQR).
+ * el espacio del codigo QR.
  *
  * @author Mario Perez
  */
@@ -45,7 +45,7 @@ public class TarjetaBoleto extends JPanel {
         add(crearDatos(), BorderLayout.CENTER);
     }
 
-    /** Recuadro del QR. Por ahora solo muestra el codigo; la imagen se agrega con cargarQR. */
+    /** Recuadro del codigo QR. */
     private JComponent crearZonaQR() {
         lblQR.setPreferredSize(new Dimension(TAMANO_QR, TAMANO_QR));
         lblQR.setMinimumSize(new Dimension(TAMANO_QR, TAMANO_QR));
@@ -55,7 +55,6 @@ public class TarjetaBoleto extends JPanel {
         lblQR.setFont(Tema.fuente(Font.BOLD, 13));
         lblQR.setBorder(BorderFactory.createLineBorder(Tema.BORDE_TARJETA));
         lblQR.setText("Código QR");
-        // TODO: QR al final -> private void cargarQR() con SwingWorker y coordinador.boletos().qr(boleto)
         return lblQR;
     }
 
@@ -91,7 +90,7 @@ public class TarjetaBoleto extends JPanel {
         return datos;
     }
 
-    /** "Jueves 5 de noviembre". */
+   
     private static String fechaLarga(LocalDateTime fecha) {
         if (fecha == null) {
             return "";
@@ -100,7 +99,7 @@ public class TarjetaBoleto extends JPanel {
         return Character.toUpperCase(texto.charAt(0)) + texto.substring(1);
     }
 
-    /** "18:30". */
+ 
     private static String hora(LocalDateTime fecha) {
         return fecha == null ? "" : HORA.format(fecha);
     }

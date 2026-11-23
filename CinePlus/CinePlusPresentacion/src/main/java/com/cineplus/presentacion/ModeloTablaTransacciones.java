@@ -67,7 +67,6 @@ public class ModeloTablaTransacciones extends AbstractTableModel {
         return false;
     }
 
-    /** "... 3845" si se pago con tarjeta; si no, el nombre del metodo. */
     private static String metodo(String metodo, String ultimosDigitos) {
         if (ultimosDigitos != null && !ultimosDigitos.isBlank()) {
             return "... " + ultimosDigitos;
@@ -75,7 +74,6 @@ public class ModeloTablaTransacciones extends AbstractTableModel {
         return metodo == null ? "" : metodo;
     }
 
-    /** "$300" o "$179.50". */
     private static String dinero(double monto) {
         DecimalFormat formato = new DecimalFormat(monto == Math.floor(monto) ? "#,##0" : "#,##0.00",
                 DecimalFormatSymbols.getInstance(Locale.US));

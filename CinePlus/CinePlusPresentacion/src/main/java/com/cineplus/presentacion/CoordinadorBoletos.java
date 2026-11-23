@@ -12,9 +12,7 @@ import com.cineplus.presentacion.formularios.admin.FrmTransacciones;
 
 /**
  * Coordinador del modulo. Boletos con QR, historial de compras, detalle, cancelacion y transacciones.
- * Usa app.cambiar(), app.ejecutar(), app.fachada() y app.confirmar().
  *
- * @author luisf
  * @author Mario Perez
  */
 public final class CoordinadorBoletos {
@@ -31,12 +29,12 @@ public final class CoordinadorBoletos {
 
     // ---------- Boletos ----------
 
-    /** Cambia a FrmBoletos; la vista pide la pagina 0. */
+    /** Abre la pantalla de boletos. */
     public void abrirBoletos() {
         app.cambiar(new FrmBoletos(app));
     }
 
-    /** fachada.listarBoletos(pagina, 4) -> vista.mostrarBoletos. */
+    /** Pide una pagina de boletos y la muestra en la vista. */
     public void cargarBoletos(FrmBoletos vista, int pagina) {
         vista.ocupado(true);
         app.ejecutar(
@@ -66,12 +64,12 @@ public final class CoordinadorBoletos {
 
     // ---------- Historial ----------
 
-    /** Cambia a FrmHistorial; la vista carga con su filtro inicial. */
+    /** Abre la pantalla del historial. */
     public void abrirHistorial() {
         app.cambiar(new FrmHistorial(app));
     }
 
-    /** fachada.consultarHistorial -> vista.mostrarCompras. */
+    /** Busca las compras con el filtro y las muestra en la vista. */
     public void cargarHistorial(FrmHistorial vista, FiltroComprasDTO filtro) {
         vista.ocupado(true);
         app.ejecutar(
@@ -89,7 +87,7 @@ public final class CoordinadorBoletos {
 
     // ---------- Detalle y cancelacion ----------
 
-    /** Cambia a FrmDetalleCompra(idCompra); la vista pide cargarCompra. */
+    /** Abre el detalle de la compra. */
     public void abrirDetalle(Integer idCompra) {
         if (idCompra == null) {
             return;
@@ -97,7 +95,7 @@ public final class CoordinadorBoletos {
         app.cambiar(new FrmDetalleCompra(app, idCompra));
     }
 
-    /** fachada.obtenerCompra -> vista.mostrarCompra. */
+    /** Busca la compra y la muestra en el detalle. */
     public void cargarCompra(FrmDetalleCompra vista, Integer idCompra) {
         vista.ocupado(true);
         app.ejecutar(
@@ -126,7 +124,7 @@ public final class CoordinadorBoletos {
     }
 
     /**
-     * fachada.cancelarCompra -> pantalla de exito y despues el historial.
+     * Cancela la compra; si sale bien muestra la pantalla de exito y despues el historial.
      */
     public void cancelarCompra(FrmDetalleCompra vista, CancelacionDTO datos) {
         vista.ocupado(true);
@@ -142,12 +140,12 @@ public final class CoordinadorBoletos {
 
     // ---------- Transacciones (admin) ----------
 
-    /** Cambia a FrmTransacciones (lo llama la navegacion del admin). */
+    /** Abre la pantalla de transacciones del admin. */
     public void abrirTransacciones() {
         app.cambiar(new FrmTransacciones(app));
     }
 
-    /** fachada.listarTransacciones -> vista.mostrarTransacciones. */
+    /** Busca las transacciones con el filtro y las muestra en la vista. */
     public void cargarTransacciones(FrmTransacciones vista, FiltroComprasDTO filtro) {
         vista.ocupado(true);
         app.ejecutar(

@@ -194,7 +194,6 @@ public class DlgCancelacion extends javax.swing.JDialog {
         return lista.isEmpty() ? "—" : String.join(", ", lista);
     }
 
-    /** "Jueves 5 de noviembre · 18:30". */
     private static String fechaYHora(LocalDateTime fecha) {
         if (fecha == null) {
             return "";
@@ -203,7 +202,6 @@ public class DlgCancelacion extends javax.swing.JDialog {
         return Character.toUpperCase(texto.charAt(0)) + texto.substring(1) + " · " + HORA.format(fecha);
     }
 
-    /** "$300" o "$179.50". */
     private static String dinero(double monto) {
         DecimalFormat formato = new DecimalFormat(monto == Math.floor(monto) ? "#,##0" : "#,##0.00",
                 DecimalFormatSymbols.getInstance(Locale.US));

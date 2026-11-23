@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * Objeto de negocio de boletos y su codigo QR.
  *
- * @author luisf
  * @author Mario Perez
  */
 public class BoletoBO {
@@ -48,7 +47,6 @@ public class BoletoBO {
 
     /** Imagen PNG del QR del boleto. */
     public byte[] generarQR(BoletoDTO boleto) throws Exception {
-        // Lo implementa el Desarrollador 4
         throw new Exception("Pendiente: BoletoBO.generarQR");
     }
 }

@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * Implementacion JPA del DAO de boletos.
  *
- * @author luisf
  * @author Mario Perez
  */
 public class BoletoDAO implements IBoletoDAO {

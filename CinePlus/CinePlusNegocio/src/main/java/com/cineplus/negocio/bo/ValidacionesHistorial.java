@@ -6,7 +6,6 @@ import com.cineplus.dto.FiltroComprasDTO;
 /**
  * Reglas de validacion del modulo. Los mensajes se muestran tal cual en la pantalla.
  *
- * @author luisf
  * @author Mario Perez
  */
 final class ValidacionesHistorial {

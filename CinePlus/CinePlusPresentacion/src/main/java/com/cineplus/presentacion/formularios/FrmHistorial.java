@@ -51,7 +51,7 @@ public class FrmHistorial extends JFrame {
     private static final int PAGINAS_VISIBLES = 7;
     /** Columna "Estado" de ModeloTablaCompras. */
     private static final int COLUMNA_ESTADO = 6;
-    /** Verde de "Aprobado". TODO: pedir a Desarrollador 1 que lo agregue a Tema. */
+    /** Verde del estado "Aprobado". */
     private static final Color VERDE = new Color(0x4cc38a);
     /** Formato de captura de las fechas del filtro. */
     private static final DateTimeFormatter FECHA_CAPTURA =
@@ -225,7 +225,7 @@ public class FrmHistorial extends JFrame {
                 : pagina.total() + (pagina.total() == 1 ? " compra" : " compras"));
     }
 
-    /** Paginador del Figma "&lt; 1 - 2 - 3 &gt;" dentro de pnlPaginador. */
+    /** Dibuja los numeros de pagina dentro de pnlPaginador. */
     private void dibujarPaginador() {
         pnlPaginador.removeAll();
         JPanel botones = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));
